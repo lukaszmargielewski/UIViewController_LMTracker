@@ -7,10 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A11F25611BD13A52003D0A74 /* LMStatsTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = A11F255C1BD13A52003D0A74 /* LMStatsTracker.m */; settings = {ASSET_TAGS = (); }; };
+		A11F25621BD13A52003D0A74 /* NSObject+Swizzle.m in Sources */ = {isa = PBXBuildFile; fileRef = A11F255E1BD13A52003D0A74 /* NSObject+Swizzle.m */; settings = {ASSET_TAGS = (); }; };
+		A11F25631BD13A52003D0A74 /* UIViewController_LMStatsTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = A11F25601BD13A52003D0A74 /* UIViewController_LMStatsTracker.m */; settings = {ASSET_TAGS = (); }; };
 		A1B5FD741BD12E2900F1044E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A1B5FD731BD12E2900F1044E /* main.m */; };
 		A1B5FD771BD12E2900F1044E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A1B5FD761BD12E2900F1044E /* AppDelegate.m */; };
 		A1B5FD7A1BD12E2900F1044E /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A1B5FD791BD12E2900F1044E /* ViewController.m */; };
-		A1B5FD7D1BD12E2900F1044E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A1B5FD7B1BD12E2900F1044E /* Main.storyboard */; };
 		A1B5FD7F1BD12E2900F1044E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A1B5FD7E1BD12E2900F1044E /* Assets.xcassets */; };
 		A1B5FD821BD12E2900F1044E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A1B5FD801BD12E2900F1044E /* LaunchScreen.storyboard */; };
 		A1B5FD8D1BD12E2900F1044E /* UIVCTrackingExampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = A1B5FD8C1BD12E2900F1044E /* UIVCTrackingExampleTests.m */; };
@@ -27,13 +29,18 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		A11F255B1BD13A52003D0A74 /* LMStatsTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMStatsTracker.h; sourceTree = "<group>"; };
+		A11F255C1BD13A52003D0A74 /* LMStatsTracker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMStatsTracker.m; sourceTree = "<group>"; };
+		A11F255D1BD13A52003D0A74 /* NSObject+Swizzle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+Swizzle.h"; sourceTree = "<group>"; };
+		A11F255E1BD13A52003D0A74 /* NSObject+Swizzle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+Swizzle.m"; sourceTree = "<group>"; };
+		A11F255F1BD13A52003D0A74 /* UIViewController_LMStatsTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIViewController_LMStatsTracker.h; sourceTree = "<group>"; };
+		A11F25601BD13A52003D0A74 /* UIViewController_LMStatsTracker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIViewController_LMStatsTracker.m; sourceTree = "<group>"; };
 		A1B5FD6F1BD12E2900F1044E /* UIVCTrackingExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UIVCTrackingExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A1B5FD731BD12E2900F1044E /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		A1B5FD751BD12E2900F1044E /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		A1B5FD761BD12E2900F1044E /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		A1B5FD781BD12E2900F1044E /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		A1B5FD791BD12E2900F1044E /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
-		A1B5FD7C1BD12E2900F1044E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		A1B5FD7E1BD12E2900F1044E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A1B5FD811BD12E2900F1044E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A1B5FD831BD12E2900F1044E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -60,9 +67,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		A11F255A1BD13A52003D0A74 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				A11F255B1BD13A52003D0A74 /* LMStatsTracker.h */,
+				A11F255C1BD13A52003D0A74 /* LMStatsTracker.m */,
+				A11F255D1BD13A52003D0A74 /* NSObject+Swizzle.h */,
+				A11F255E1BD13A52003D0A74 /* NSObject+Swizzle.m */,
+				A11F255F1BD13A52003D0A74 /* UIViewController_LMStatsTracker.h */,
+				A11F25601BD13A52003D0A74 /* UIViewController_LMStatsTracker.m */,
+			);
+			path = Source;
+			sourceTree = "<group>";
+		};
 		A1B5FD661BD12E2900F1044E = {
 			isa = PBXGroup;
 			children = (
+				A11F255A1BD13A52003D0A74 /* Source */,
 				A1B5FD711BD12E2900F1044E /* UIVCTrackingExample */,
 				A1B5FD8B1BD12E2900F1044E /* UIVCTrackingExampleTests */,
 				A1B5FD701BD12E2900F1044E /* Products */,
@@ -85,7 +106,6 @@
 				A1B5FD761BD12E2900F1044E /* AppDelegate.m */,
 				A1B5FD781BD12E2900F1044E /* ViewController.h */,
 				A1B5FD791BD12E2900F1044E /* ViewController.m */,
-				A1B5FD7B1BD12E2900F1044E /* Main.storyboard */,
 				A1B5FD7E1BD12E2900F1044E /* Assets.xcassets */,
 				A1B5FD801BD12E2900F1044E /* LaunchScreen.storyboard */,
 				A1B5FD831BD12E2900F1044E /* Info.plist */,
@@ -193,7 +213,6 @@
 			files = (
 				A1B5FD821BD12E2900F1044E /* LaunchScreen.storyboard in Resources */,
 				A1B5FD7F1BD12E2900F1044E /* Assets.xcassets in Resources */,
-				A1B5FD7D1BD12E2900F1044E /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -211,9 +230,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A11F25611BD13A52003D0A74 /* LMStatsTracker.m in Sources */,
+				A11F25631BD13A52003D0A74 /* UIViewController_LMStatsTracker.m in Sources */,
 				A1B5FD7A1BD12E2900F1044E /* ViewController.m in Sources */,
 				A1B5FD771BD12E2900F1044E /* AppDelegate.m in Sources */,
 				A1B5FD741BD12E2900F1044E /* main.m in Sources */,
+				A11F25621BD13A52003D0A74 /* NSObject+Swizzle.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -236,14 +258,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		A1B5FD7B1BD12E2900F1044E /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				A1B5FD7C1BD12E2900F1044E /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		A1B5FD801BD12E2900F1044E /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -400,6 +414,7 @@
 				A1B5FD931BD12E2900F1044E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		A1B5FD941BD12E2900F1044E /* Build configuration list for PBXNativeTarget "UIVCTrackingExampleTests" */ = {
 			isa = XCConfigurationList;
@@ -408,6 +423,7 @@
 				A1B5FD961BD12E2900F1044E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

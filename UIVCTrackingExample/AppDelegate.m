@@ -7,9 +7,12 @@
 //
 
 #import "AppDelegate.h"
+#import "LMStatsTracker.h"
+#import "ViewController.h"
+
 
 @interface AppDelegate ()
-
+@property (nonatomic, strong) LMStatsTracker *statsTracker;
 @end
 
 @implementation AppDelegate
@@ -17,6 +20,19 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    
+    self.statsTracker = [[LMStatsTracker alloc] init];
+    [UIViewController setStatisticsTracker:self.statsTracker];
+    
+    ViewController *vc = [[ViewController alloc] init];
+    vc.tracker.userInfo = @{@"push_stack_count" : @(0)};
+    UINavigationController *nc = [[UINavigationController alloc] initWithRootViewController:vc];
+    
+    self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    self.window.rootViewController = nc;
+    
+    [self.window makeKeyAndVisible];
+    
     return YES;
 }
 

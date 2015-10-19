@@ -8,16 +8,14 @@
 
 -(instancetype)initWithViewController:(UIViewController *)viewController;
 
-@property (nonatomic, strong) NSDictionary *userInfo;
-@property (nonatomic, strong) NSString *IDString;
 @property (nonatomic, assign, readonly) UIViewController *viewController;
-
-@property (nonatomic, strong, readonly) Class viewControllerClass;
-
+@property (nonatomic, strong) id<NSCopying>userInfo;
 @end
 
-@protocol UIViewControllerStatsTracker<NSObject>
+@protocol LMUIVCTrackerDelegate<NSObject>
 
+// ALL OF THIS METHODS ARE OPTIONAL:
+@optional
 - (void)UIViewControllerInit:(UIViewController *)viewController;
 
 - (void)UIViewController:(UIViewController *)viewController didDealocWithTracker:(LMUIVCTracker *)tracker;
@@ -31,10 +29,10 @@
 
 @end
 
-@interface UIViewController(LMStatsTracker)
+@interface UIViewController(LMUIVCTracker)
 
 @property (nonatomic, readonly) LMUIVCTracker *tracker;
 
-+ (void)setStatisticsTracker:(id<UIViewControllerStatsTracker>)startsTracer;
++ (void)setTrackerDelegate:(id<LMUIVCTrackerDelegate>)startsTracer;
 
 @end

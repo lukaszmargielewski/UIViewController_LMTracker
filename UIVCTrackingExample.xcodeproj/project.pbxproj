@@ -7,9 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		A11F25611BD13A52003D0A74 /* LMStatsTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = A11F255C1BD13A52003D0A74 /* LMStatsTracker.m */; settings = {ASSET_TAGS = (); }; };
 		A11F25621BD13A52003D0A74 /* NSObject+Swizzle.m in Sources */ = {isa = PBXBuildFile; fileRef = A11F255E1BD13A52003D0A74 /* NSObject+Swizzle.m */; settings = {ASSET_TAGS = (); }; };
-		A11F25631BD13A52003D0A74 /* UIViewController_LMStatsTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = A11F25601BD13A52003D0A74 /* UIViewController_LMStatsTracker.m */; settings = {ASSET_TAGS = (); }; };
+		A11F25631BD13A52003D0A74 /* UIViewController_LMUIVCTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = A11F25601BD13A52003D0A74 /* UIViewController_LMUIVCTracker.m */; settings = {ASSET_TAGS = (); }; };
+		A16776DB1BD3A71B005A4548 /* LMStatsTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = A16776D81BD3A71B005A4548 /* LMStatsTracker.m */; settings = {ASSET_TAGS = (); }; };
+		A16776DC1BD3A71B005A4548 /* LMStatsTrackerDuration.m in Sources */ = {isa = PBXBuildFile; fileRef = A16776DA1BD3A71B005A4548 /* LMStatsTrackerDuration.m */; settings = {ASSET_TAGS = (); }; };
+		A18058F01BD4DA6700FC5583 /* NSDictionary+UrlEncoding.m in Sources */ = {isa = PBXBuildFile; fileRef = A18058EF1BD4DA6700FC5583 /* NSDictionary+UrlEncoding.m */; settings = {ASSET_TAGS = (); }; };
 		A1B5FD741BD12E2900F1044E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A1B5FD731BD12E2900F1044E /* main.m */; };
 		A1B5FD771BD12E2900F1044E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A1B5FD761BD12E2900F1044E /* AppDelegate.m */; };
 		A1B5FD7A1BD12E2900F1044E /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A1B5FD791BD12E2900F1044E /* ViewController.m */; };
@@ -29,12 +31,16 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		A11F255B1BD13A52003D0A74 /* LMStatsTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMStatsTracker.h; sourceTree = "<group>"; };
-		A11F255C1BD13A52003D0A74 /* LMStatsTracker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMStatsTracker.m; sourceTree = "<group>"; };
 		A11F255D1BD13A52003D0A74 /* NSObject+Swizzle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+Swizzle.h"; sourceTree = "<group>"; };
 		A11F255E1BD13A52003D0A74 /* NSObject+Swizzle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+Swizzle.m"; sourceTree = "<group>"; };
-		A11F255F1BD13A52003D0A74 /* UIViewController_LMStatsTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIViewController_LMStatsTracker.h; sourceTree = "<group>"; };
-		A11F25601BD13A52003D0A74 /* UIViewController_LMStatsTracker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIViewController_LMStatsTracker.m; sourceTree = "<group>"; };
+		A11F255F1BD13A52003D0A74 /* UIViewController_LMUIVCTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIViewController_LMUIVCTracker.h; sourceTree = "<group>"; };
+		A11F25601BD13A52003D0A74 /* UIViewController_LMUIVCTracker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIViewController_LMUIVCTracker.m; sourceTree = "<group>"; };
+		A16776D71BD3A71B005A4548 /* LMStatsTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMStatsTracker.h; sourceTree = "<group>"; };
+		A16776D81BD3A71B005A4548 /* LMStatsTracker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMStatsTracker.m; sourceTree = "<group>"; };
+		A16776D91BD3A71B005A4548 /* LMStatsTrackerDuration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMStatsTrackerDuration.h; sourceTree = "<group>"; };
+		A16776DA1BD3A71B005A4548 /* LMStatsTrackerDuration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMStatsTrackerDuration.m; sourceTree = "<group>"; };
+		A18058EE1BD4DA6700FC5583 /* NSDictionary+UrlEncoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+UrlEncoding.h"; sourceTree = "<group>"; };
+		A18058EF1BD4DA6700FC5583 /* NSDictionary+UrlEncoding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+UrlEncoding.m"; sourceTree = "<group>"; };
 		A1B5FD6F1BD12E2900F1044E /* UIVCTrackingExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UIVCTrackingExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A1B5FD731BD12E2900F1044E /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		A1B5FD751BD12E2900F1044E /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -70,19 +76,31 @@
 		A11F255A1BD13A52003D0A74 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				A11F255B1BD13A52003D0A74 /* LMStatsTracker.h */,
-				A11F255C1BD13A52003D0A74 /* LMStatsTracker.m */,
 				A11F255D1BD13A52003D0A74 /* NSObject+Swizzle.h */,
 				A11F255E1BD13A52003D0A74 /* NSObject+Swizzle.m */,
-				A11F255F1BD13A52003D0A74 /* UIViewController_LMStatsTracker.h */,
-				A11F25601BD13A52003D0A74 /* UIViewController_LMStatsTracker.m */,
+				A11F255F1BD13A52003D0A74 /* UIViewController_LMUIVCTracker.h */,
+				A11F25601BD13A52003D0A74 /* UIViewController_LMUIVCTracker.m */,
 			);
 			path = Source;
+			sourceTree = "<group>";
+		};
+		A16776D61BD3A71B005A4548 /* ExampleDurationStatsTracker */ = {
+			isa = PBXGroup;
+			children = (
+				A16776D71BD3A71B005A4548 /* LMStatsTracker.h */,
+				A16776D81BD3A71B005A4548 /* LMStatsTracker.m */,
+				A16776D91BD3A71B005A4548 /* LMStatsTrackerDuration.h */,
+				A16776DA1BD3A71B005A4548 /* LMStatsTrackerDuration.m */,
+				A18058EE1BD4DA6700FC5583 /* NSDictionary+UrlEncoding.h */,
+				A18058EF1BD4DA6700FC5583 /* NSDictionary+UrlEncoding.m */,
+			);
+			path = ExampleDurationStatsTracker;
 			sourceTree = "<group>";
 		};
 		A1B5FD661BD12E2900F1044E = {
 			isa = PBXGroup;
 			children = (
+				A16776D61BD3A71B005A4548 /* ExampleDurationStatsTracker */,
 				A11F255A1BD13A52003D0A74 /* Source */,
 				A1B5FD711BD12E2900F1044E /* UIVCTrackingExample */,
 				A1B5FD8B1BD12E2900F1044E /* UIVCTrackingExampleTests */,
@@ -230,12 +248,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A11F25611BD13A52003D0A74 /* LMStatsTracker.m in Sources */,
-				A11F25631BD13A52003D0A74 /* UIViewController_LMStatsTracker.m in Sources */,
+				A11F25631BD13A52003D0A74 /* UIViewController_LMUIVCTracker.m in Sources */,
+				A18058F01BD4DA6700FC5583 /* NSDictionary+UrlEncoding.m in Sources */,
 				A1B5FD7A1BD12E2900F1044E /* ViewController.m in Sources */,
 				A1B5FD771BD12E2900F1044E /* AppDelegate.m in Sources */,
 				A1B5FD741BD12E2900F1044E /* main.m in Sources */,
 				A11F25621BD13A52003D0A74 /* NSObject+Swizzle.m in Sources */,
+				A16776DC1BD3A71B005A4548 /* LMStatsTrackerDuration.m in Sources */,
+				A16776DB1BD3A71B005A4548 /* LMStatsTracker.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

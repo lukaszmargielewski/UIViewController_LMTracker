@@ -12,7 +12,7 @@
 
 
 @interface AppDelegate ()
-@property (nonatomic, strong) LMStatsTracker *statsTracker;
+@property (nonatomic, strong) LMStatsTracker *trackerDelegate;
 @end
 
 @implementation AppDelegate
@@ -21,8 +21,8 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     
-    self.statsTracker = [[LMStatsTracker alloc] init];
-    [UIViewController setStatisticsTracker:self.statsTracker];
+    self.trackerDelegate = [[LMStatsTracker alloc] init];
+    [UIViewController setTrackerDelegate:self.trackerDelegate];
     
     ViewController *vc = [[ViewController alloc] init];
     vc.tracker.userInfo = @{@"push_stack_count" : @(0)};

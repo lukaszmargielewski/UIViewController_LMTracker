@@ -11,17 +11,21 @@
 @interface LMStatsTrackerDuration : NSObject<NSCopying>
 
 @property (nonatomic, readonly) double duration;
+@property (nonatomic, readonly) NSUInteger resumeCount;
+
 @property (nonatomic, readonly, getter=isPaused) BOOL paused;
 
-@property (nonatomic, readonly) id<NSCopying>userInfo;
+@property (nonatomic, readonly, nonnull) id <NSCopying> userInfo;
+@property (nonatomic, readonly, nonnull)  NSString *identifierString;
 
-- (instancetype)initStatsForUserInfo:(id<NSCopying>)userInfo;
+- (instancetype)initStatsForUserInfo:(nonnull id<NSCopying>)userInfo
+                    identifierString:(nonnull NSString *)idString;
 
 
 - (void)pauseTime;
 - (void)resumeTime;
 - (void)updateDuration;
 
-- (void)resetTime;
+- (void)reset;
 
 @end

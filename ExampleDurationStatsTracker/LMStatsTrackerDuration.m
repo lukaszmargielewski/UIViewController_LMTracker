@@ -30,6 +30,8 @@ static inline double trackerGetTimeNow(){
 @synthesize duration = _duration;
 @synthesize paused = _paused;
 @synthesize userInfo =_userInfo;
+@synthesize identifierString = _identifierString;
+@synthesize resumeCount = _resumeCount;
 
 - (void)setDuration:(double)duration{
 
@@ -41,17 +43,29 @@ static inline double trackerGetTimeNow(){
     
     _userInfo = [userInfo copyWithZone:nil];
 }
+- (void)setResumeCount:(NSUInteger)resumeCount{
 
-- (instancetype)initStatsForUserInfo:(id<NSCopying>)userInfo{
+    _resumeCount = resumeCount;
+}
+- (void)setIdentifierString:(NSString *)identifierString{
+
+    _identifierString = [identifierString copy];
+}
+
+- (instancetype)initStatsForUserInfo:(nonnull id<NSCopying>)userInfo
+                    identifierString:(nonnull NSString *)idString{
 
     NSAssert(userInfo != nil, @"userInfo must NOT be nil.");
+    NSAssert(userInfo != nil, @"identifierString must NOT be nil.");
     
     self = [super init];
     
     if (self) {
         
         _userInfo = [userInfo copyWithZone:nil];
-        [self resetTime];
+        _identifierString = [idString copy];
+        
+        [self reset];
     }
     return self;
     
@@ -70,6 +84,8 @@ static inline double trackerGetTimeNow(){
     
     [copiedObject setDuration:self.duration];
     [copiedObject setUserInfo:self.userInfo];
+    [copiedObject setIdentifierString:self.identifierString];
+    [copiedObject setResumeCount:self.resumeCount];
     
     return copiedObject;
 }
@@ -89,15 +105,17 @@ static inline double trackerGetTimeNow(){
 
     if (_paused) {
         _paused = NO;
+        _resumeCount++;
         _referenceTime = trackerGetTimeNow();
     }
    
 }
 
-- (void)resetTime{
+- (void)reset{
 
     _referenceTime = trackerGetTimeNow();
     _duration = 0;
+    _resumeCount = 1;
 }
 - (void)updateDuration{
     
@@ -106,7 +124,7 @@ static inline double trackerGetTimeNow(){
     double tNow = trackerGetTimeNow();
     double timePassed = tNow - _referenceTime;
     _duration += timePassed;
-    _referenceTime = CACurrentMediaTime();
+    _referenceTime = trackerGetTimeNow();
 
 }
 @end

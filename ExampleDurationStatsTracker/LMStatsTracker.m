@@ -47,40 +47,50 @@
     
     return _trackingDictionary;
 }
-- (NSString *)keyForTrackedObject:(id)trackedObject{
 
-    uintptr_t pointer_as_integer = (uintptr_t)trackedObject;
-    NSString *pointerKey = [NSString stringWithFormat:@"pointer_%li", pointer_as_integer];
-    return pointerKey;
-    
-}
 
 
 #pragma mark - Delegate Metods:
 
 - (void)UIViewController:(UIViewController *)viewController
     didDealocWithTracker:(LMUIVCTracker *)tracker{
+    
+    LMStatsTrackerDuration *stats = [self statsForViewController:viewController tracker:tracker createIfNeeded:NO];
+    
+    if (stats) {
 
-    NSString *iString = [(NSDictionary *)tracker.userInfo stringWithKeyValueSeparator:@"=" valuesSeparator:@", " urlEncode:NO];
-    
-    NSLog(@"%@ will dealloc with user info: %@", NSStringFromClass(viewController.class), iString);
-    
-    [self debugLogAllDurations];
-    
-
+        NSLog(@"%@ will dealloc with user info: %@", NSStringFromClass(viewController.class), stats.identifierString);
+        [self debugLogAllDurations];
+    }
 }
 
 - (LMStatsTrackerDuration *)statsForViewController:(UIViewController *)viewController
                                            tracker:(LMUIVCTracker *)tracker
                                     createIfNeeded:(BOOL)createIfNeeded{
 
-    NSString *pointerKey = [self keyForTrackedObject:viewController];
-    LMStatsTrackerDuration *stats = self.trackingDictionary[pointerKey];
+    NSDictionary *userInfo = (NSDictionary *)tracker.userInfo;
+    
+    if(!userInfo){
+        return nil;
+    }
+    
+    
+    //uintptr_t pointer_as_integer = (uintptr_t)viewController;
+    //NSString *pointerKey = [NSString stringWithFormat:@"pointer_%li", pointer_as_integer];
+    //NSString *key = pointerKey;
+    
+    
+    // DISCUSSION:
+    // In this tracking mechanism, userInfo decides about identity (not the object pointer):
+    NSString *iString = [userInfo stringWithKeyValueSeparator:@"=" valuesSeparator:@", " urlEncode:NO];
+    NSString *key = iString;
+    
+    LMStatsTrackerDuration *stats = self.trackingDictionary[key];
     
     if (!stats && createIfNeeded && tracker.userInfo) {
         
-        stats = [[LMStatsTrackerDuration alloc] initStatsForUserInfo:tracker.userInfo];
-        self.trackingDictionary[pointerKey] = stats;
+        stats = [[LMStatsTrackerDuration alloc] initStatsForUserInfo:tracker.userInfo identifierString:iString];
+        self.trackingDictionary[key] = stats;
     }
     
     return stats;
@@ -107,12 +117,10 @@
         return;
     }
     
-    NSString *iString = [(NSDictionary *)tracker.userInfo stringWithKeyValueSeparator:@"=" valuesSeparator:@", " urlEncode:NO];
-    
-    
-    NSLog(@"MIHStatsTracker %@ viewWillDisappear: %@", NSStringFromClass(viewController.class), iString);
     
     LMStatsTrackerDuration *stats = [self statsForViewController:viewController tracker:tracker createIfNeeded:NO];
+    NSLog(@"MIHStatsTracker %@ viewWillDisappear: %@", NSStringFromClass(viewController.class), stats.identifierString);
+    
     [stats pauseTime];
 }
 
@@ -162,9 +170,7 @@
     for (NSString *key in self.trackingDictionary.allKeys) {
         
         LMStatsTrackerDuration *durationStats = self.trackingDictionary[key];
-        NSString *iString = [(NSDictionary *)durationStats.userInfo stringWithKeyValueSeparator:@"=" valuesSeparator:@", " urlEncode:NO];
-        
-        NSLog(@"%i. %@ => %.2f sec", i, iString, durationStats.duration);
+        NSLog(@"%i. %@ => %.2f sec (count: %i)", i, durationStats.identifierString, durationStats.duration, durationStats.resumeCount);
         i++;
     }
     
@@ -197,8 +203,7 @@
     for (NSString *key in self.trackingDictionary.allKeys) {
         
         LMStatsTrackerDuration *durationStats = self.trackingDictionary[key];
-        
-        [durationStats resetTime];
+        [durationStats reset];
     }
     
 }

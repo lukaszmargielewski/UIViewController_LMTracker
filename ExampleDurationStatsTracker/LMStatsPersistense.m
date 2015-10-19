@@ -49,7 +49,7 @@
     return _directory;
 }
 
-- (void)debugLogAllSavedStats{
+- (NSArray *)allSavedStats{
 
     NSError *error = nil;
     
@@ -59,30 +59,37 @@
     int i = 0;
     int c = files.count;
     
+    NSMutableArray *allParts = [[NSMutableArray alloc] init];
+    
     NSLog(@"");
     NSLog(@"====================== SAVED %i FILES", c);
     for (NSString *fileName in files) {
         NSString *filePath = [self.directory stringByAppendingPathComponent:fileName];
         NSArray *partStats = [NSKeyedUnarchiver unarchiveObjectWithFile:filePath];
+        [allParts addObjectsFromArray:partStats];
+        
         i++;
-        NSLog(@"------");
         NSLog(@"%i/%i. file: %@ => %i stats", i, c, fileName, partStats.count);
-        
-        
-        int j = 1;
-        
-        for (LMStatsDuration *ds in partStats) {
-            
-            NSLog(@"%i. %@ => %.2f sec (count: %i)", j, ds.identifierString, ds.duration, ds.resumeCount);
-            j++;
-        }
-        
-        
-        NSLog(@"-----");
-        NSLog(@"");
+    
         
         
     }
+    
+    return allParts;
+}
+- (void)debugLogAllSavedStats{
+
+    NSArray *allParts = [self allSavedStats];
+    
+    int j = 1;
+    
+    NSLog(@"Merged:");
+    for (LMStatsDuration *ds in allParts) {
+        
+        NSLog(@"%i. %@ => %.2f sec (count: %i)", j, ds.identifierString, ds.duration, ds.resumeCount);
+        j++;
+    }
+    
     
     NSLog(@"======================");
     NSLog(@"");

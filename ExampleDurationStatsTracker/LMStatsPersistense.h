@@ -11,6 +11,7 @@
 
 @interface LMStatsPersistense : NSObject<LMStatsTrackerPersistance>
 
+- (NSArray *)allSavedStats;
 - (void)debugLogAllSavedStats;
 
 @end

@@ -224,7 +224,7 @@
         
         if (ds.visible) {
         
-            [ds reset];
+            [ds resetDurationAndResumeCount];
             
         }else{
         
@@ -238,7 +238,7 @@
 
 #pragma mark - Reporting:
 
-- (NSArray *)getAllStartsAsSet{
+- (NSArray *)getAllStarts{
 
     NSMutableSet *set = [[NSMutableSet alloc] initWithCapacity:self.trackingDictionary.allKeys.count];
     
@@ -258,7 +258,7 @@
     
     if (_persistance) {
         BOOL shouldResetDurations = [_persistance LMStatsTracker:self
-                                            persistStatistics:[self getAllStartsAsSet]];
+                                            persistStatistics:[self getAllStarts]];
         if (shouldResetDurations) {
             [self resetAll];
         }

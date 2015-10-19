@@ -5,21 +5,21 @@
 #import <Foundation/Foundation.h>
 
 #import "UIViewController_LMUIVCTracker.h"
-#import "LMStatsTrackerDuration.h"
+#import "LMStatsDuration.h"
 
 
 @class LMStatsTracker;
 
-@protocol LMStatsTrackerReporter<NSObject>
+@protocol LMStatsTrackerPersistance<NSObject>
 
 - (BOOL)LMStatsTracker:(LMStatsTracker *)statsTracker
-     reportsStatistics:(NSSet *)statistics;
+     persistStatistics:(NSArray *)statistics;
 
 @end
 
 
 @interface LMStatsTracker : NSObject<LMUIVCTrackerDelegate>
 
-@property (nonatomic, assign) id<LMStatsTrackerReporter>reporter;
+@property (nonatomic, assign) id<LMStatsTrackerPersistance>persistance;
 
 @end

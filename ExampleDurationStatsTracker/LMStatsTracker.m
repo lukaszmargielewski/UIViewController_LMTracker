@@ -55,16 +55,19 @@
 - (void)UIViewController:(UIViewController *)viewController
     didDealocWithTracker:(LMUIVCTracker *)tracker{
     
-    LMStatsTrackerDuration *stats = [self statsForViewController:viewController tracker:tracker createIfNeeded:NO];
+    LMStatsDuration *stats = [self statsForViewController:viewController tracker:tracker createIfNeeded:NO];
     
     if (stats) {
 
+        stats.visible = NO;
+        [stats pauseTime];
+        
         NSLog(@"%@ will dealloc with user info: %@", NSStringFromClass(viewController.class), stats.identifierString);
         [self debugLogAllDurations];
     }
 }
 
-- (LMStatsTrackerDuration *)statsForViewController:(UIViewController *)viewController
+- (LMStatsDuration *)statsForViewController:(UIViewController *)viewController
                                            tracker:(LMUIVCTracker *)tracker
                                     createIfNeeded:(BOOL)createIfNeeded{
 
@@ -75,24 +78,24 @@
     }
     
     
-    //uintptr_t pointer_as_integer = (uintptr_t)viewController;
-    //NSString *pointerKey = [NSString stringWithFormat:@"pointer_%li", pointer_as_integer];
-    //NSString *key = pointerKey;
+    uintptr_t pointer_as_integer = (uintptr_t)viewController;
+    NSString *pointerKey = [NSString stringWithFormat:@"pointer_%li", pointer_as_integer];
+    NSString *key = pointerKey;
     
     
     // DISCUSSION:
     // In this tracking mechanism, userInfo decides about identity (not the object pointer):
-    NSString *iString = [userInfo stringWithKeyValueSeparator:@"=" valuesSeparator:@", " urlEncode:NO];
-    NSString *key = iString;
+    NSString *iString = [userInfo stringWithKeyValueSeparator:@"_" valuesSeparator:@"," urlEncode:NO];
+    //NSString *key = iString;
     
-    LMStatsTrackerDuration *stats = self.trackingDictionary[key];
+    LMStatsDuration *stats = self.trackingDictionary[key];
     
     if (!stats && createIfNeeded && tracker.userInfo) {
         
-        stats = [[LMStatsTrackerDuration alloc] initStatsForUserInfo:tracker.userInfo identifierString:iString];
+        stats = [[LMStatsDuration alloc] initStatsForUserInfo:tracker.userInfo identifierString:iString];
         self.trackingDictionary[key] = stats;
     }
-    
+
     return stats;
 }
 
@@ -102,7 +105,8 @@
              withTracker:(LMUIVCTracker *)tracker{
     
     
-    LMStatsTrackerDuration *stats = [self statsForViewController:viewController tracker:tracker createIfNeeded:YES];
+    LMStatsDuration *stats = [self statsForViewController:viewController tracker:tracker createIfNeeded:YES];
+    stats.visible = YES;
     [stats resumeTime];
     
 }
@@ -118,7 +122,8 @@
     }
     
     
-    LMStatsTrackerDuration *stats = [self statsForViewController:viewController tracker:tracker createIfNeeded:NO];
+    LMStatsDuration *stats = [self statsForViewController:viewController tracker:tracker createIfNeeded:NO];
+    stats.visible = NO;
     NSLog(@"MIHStatsTracker %@ viewWillDisappear: %@", NSStringFromClass(viewController.class), stats.identifierString);
     
     [stats pauseTime];
@@ -141,7 +146,9 @@
 - (void)appDidBecomeActive:(NSNotification *)notification{
 
     NSLog(@"%@" , NSStringFromSelector(_cmd));
-    [self resumeAll];
+    [self resumeAllVisible];
+    [self debugLogAllDurations];
+    
 }
 - (void)appWillResignActive:(NSNotification *)notification{
 
@@ -162,77 +169,96 @@
 
 - (void)debugLogAllDurations{
 
-    int i = 1;
     
-    NSLog(@"");
-    NSLog(@"++++++++++++++ Debug stats START ++++++++++++++++");
     
-    for (NSString *key in self.trackingDictionary.allKeys) {
+    NSArray *allKeys = self.trackingDictionary.allKeys;
+    
+    if (allKeys.count) {
+       
+        int i = 1;
+        NSLog(@"");
+        NSLog(@"++++++++++++++++++++++++++++++");
         
-        LMStatsTrackerDuration *durationStats = self.trackingDictionary[key];
-        NSLog(@"%i. %@ => %.2f sec (count: %i)", i, durationStats.identifierString, durationStats.duration, durationStats.resumeCount);
-        i++;
+        for (NSString *key in allKeys) {
+            
+            LMStatsDuration *ds = self.trackingDictionary[key];
+            NSLog(@"%i. %@ => %.2f count: %i (v: %i, p: %i)", i, ds.identifierString, ds.duration, ds.resumeCount, ds.visible, ds.paused);
+            i++;
+        }
+        
+        
+        NSLog(@"++++++++++++++++++++++++++++++");
+        NSLog(@"");
     }
     
-    
-    NSLog(@"++++++++++++++ Debug stats START ++++++++++++++++");
-    NSLog(@"");
     
 }
 - (void)pauseAll{
 
     for (NSString *key in self.trackingDictionary.allKeys) {
         
-        LMStatsTrackerDuration *durationStats = self.trackingDictionary[key];
+        LMStatsDuration *ds = self.trackingDictionary[key];
 
-        [durationStats pauseTime];
+        [ds pauseTime];
     }
     
 }
-- (void)resumeAll{
+- (void)resumeAllVisible{
 
     for (NSString *key in self.trackingDictionary.allKeys) {
         
-        LMStatsTrackerDuration *durationStats = self.trackingDictionary[key];
+        LMStatsDuration *ds = self.trackingDictionary[key];
         
-        [durationStats resumeTime];
+        if (ds.visible) {
+        
+            [ds resumeTime];
+        }
     }
 }
+
 - (void)resetAll{
     
     for (NSString *key in self.trackingDictionary.allKeys) {
         
-        LMStatsTrackerDuration *durationStats = self.trackingDictionary[key];
-        [durationStats reset];
+        LMStatsDuration *ds = self.trackingDictionary[key];
+        
+        if (ds.visible) {
+        
+            [ds reset];
+            
+        }else{
+        
+            [self.trackingDictionary removeObjectForKey:key];
+        }
+        
     }
     
 }
 
 
-
 #pragma mark - Reporting:
 
-- (NSSet *)getAllStartsAsSet{
+- (NSArray *)getAllStartsAsSet{
 
     NSMutableSet *set = [[NSMutableSet alloc] initWithCapacity:self.trackingDictionary.allKeys.count];
     
     for (NSString *key in self.trackingDictionary.allKeys) {
         
-        LMStatsTrackerDuration *durationStats = self.trackingDictionary[key];
-        [durationStats updateDuration];
-        [set addObject:[durationStats copy]];
+        LMStatsDuration *ds = self.trackingDictionary[key];
+        [ds updateDuration];
+        [set addObject:[ds copy]];
     }
     
-    return set;
+    return [set allObjects];
 }
 - (void)reportAll{
 
 
     [self debugLogAllDurations];
     
-    if (_reporter) {
-        BOOL shouldResetDurations = [_reporter LMStatsTracker:self
-                                            reportsStatistics:[self getAllStartsAsSet]];
+    if (_persistance) {
+        BOOL shouldResetDurations = [_persistance LMStatsTracker:self
+                                            persistStatistics:[self getAllStartsAsSet]];
         if (shouldResetDurations) {
             [self resetAll];
         }

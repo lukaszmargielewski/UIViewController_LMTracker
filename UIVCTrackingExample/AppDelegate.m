@@ -9,10 +9,12 @@
 #import "AppDelegate.h"
 #import "LMStatsTracker.h"
 #import "ViewController.h"
+#import "LMStatsPersistense.h"
 
 
 @interface AppDelegate ()
 @property (nonatomic, strong) LMStatsTracker *trackerDelegate;
+@property (nonatomic, strong) LMStatsPersistense *statsPersistence;
 @end
 
 @implementation AppDelegate
@@ -22,10 +24,13 @@
     // Override point for customization after application launch.
     
     self.trackerDelegate = [[LMStatsTracker alloc] init];
+    self.statsPersistence = [[LMStatsPersistense alloc] init];
+    self.trackerDelegate.persistance = self.statsPersistence;
+    
     [UIViewController setTrackerDelegate:self.trackerDelegate];
     
     ViewController *vc = [[ViewController alloc] init];
-    vc.tracker.userInfo = @{@"push_stack_count" : @(0)};
+    vc.tracker.userInfo = @{@"stack" : @(0)};
     UINavigationController *nc = [[UINavigationController alloc] initWithRootViewController:vc];
     
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
@@ -52,6 +57,7 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+    [self.statsPersistence debugLogAllSavedStats];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {

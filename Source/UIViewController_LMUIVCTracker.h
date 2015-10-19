@@ -10,6 +10,8 @@
 
 @property (nonatomic, assign, readonly) UIViewController *viewController;
 @property (nonatomic, strong) id<NSCopying>userInfo;
+
+@property (nonatomic, readonly, getter=isVisible) BOOL visible;
 @end
 
 @protocol LMUIVCTrackerDelegate<NSObject>

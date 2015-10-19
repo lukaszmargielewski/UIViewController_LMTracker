@@ -8,7 +8,10 @@
 
 #define DLog //DLog
 
+@interface LMUIVCTracker()
+- (void)setVisible:(BOOL)visible;
 
+@end
 
 @interface UIViewController()
 
@@ -119,8 +122,10 @@ static char UIB_PROPERTY_KEY_DEALLOC_OBSERVER;
 }
 - (void)stats_viewWillDisappear:(BOOL)animated{
     
+    [self.tracker setVisible:YES];
     //DLog(@"stats_viewWillDisappear: %@", NSStringFromClass(self.class));
     [self stats_viewWillDisappear:animated];
+    
     
     if (_trackerDelegate && [_trackerDelegate respondsToSelector:@selector(UIViewController:viewWillDisappear:withTracker:)]) {
         
@@ -132,15 +137,16 @@ static char UIB_PROPERTY_KEY_DEALLOC_OBSERVER;
 - (void)stats_viewDidDisappear:(BOOL)animated{
     
     //DLog(@"stats_viewDidDisappear: %@", NSStringFromClass(self.class));
+    
+    [self.tracker setVisible:NO];
     [self stats_viewDidDisappear:animated];
+    
+    
     
     if (_trackerDelegate && [_trackerDelegate respondsToSelector:@selector(UIViewController:viewDidDisappear:withTracker:)]) {
         
         [_trackerDelegate UIViewController:self viewDidDisappear:animated withTracker:self.tracker];
     }
-    
-    
-    
 }
 
 @end
@@ -148,7 +154,13 @@ static char UIB_PROPERTY_KEY_DEALLOC_OBSERVER;
 @implementation LMUIVCTracker
 
 @synthesize viewController = _viewController;
+@synthesize visible = _visible;
 
+- (void)setVisible:(BOOL)visible{
+
+    _visible = visible;
+    
+}
 -(instancetype)initWithViewController:(UIViewController *)viewController{
     
     self = [super init];

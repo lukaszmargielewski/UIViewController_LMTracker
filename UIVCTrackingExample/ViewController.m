@@ -50,7 +50,7 @@
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Push" style:UIBarButtonItemStyleDone target:self action:@selector(push:)];
     
-    self.title = [NSString stringWithFormat:@"Controller nr %@", self.tracker.userInfo[@"push_stack_count"]];
+    self.title = [NSString stringWithFormat:@"Controller nr %@", self.tracker.userInfo[@"stack"]];
     
 }
 - (void)push:(id)sender{
@@ -58,7 +58,7 @@
     ViewController *vc = [[ViewController alloc] init];
     
     NSUInteger count = self.navigationController.viewControllers.count;
-    vc.tracker.userInfo = @{@"push_stack_count" : @(count)};
+    vc.tracker.userInfo = @{@"stack" : @(count)};
     [self.navigationController pushViewController:vc animated:YES];
     
 }

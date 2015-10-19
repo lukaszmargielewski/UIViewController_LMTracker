@@ -8,12 +8,17 @@
 
 #import <Foundation/Foundation.h>
 
-@interface LMStatsTrackerDuration : NSObject<NSCopying>
+@class LMUIVCTracker;
 
+@interface LMStatsDuration : NSObject<NSCopying, NSCoding>
+
+@property (nonatomic, readonly) double tStart;
+@property (nonatomic, readonly) double tEnd;
 @property (nonatomic, readonly) double duration;
 @property (nonatomic, readonly) NSUInteger resumeCount;
 
 @property (nonatomic, readonly, getter=isPaused) BOOL paused;
+@property (nonatomic) BOOL visible;
 
 @property (nonatomic, readonly, nonnull) id <NSCopying> userInfo;
 @property (nonatomic, readonly, nonnull)  NSString *identifierString;
@@ -26,6 +31,6 @@
 - (void)resumeTime;
 - (void)updateDuration;
 
-- (void)reset;
+- (void)resetDurationAndResumeCount;
 
 @end

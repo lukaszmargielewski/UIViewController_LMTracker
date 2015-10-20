@@ -9,12 +9,13 @@
 #import "AppDelegate.h"
 #import "LMStatsTracker.h"
 #import "ViewController.h"
-#import "LMStatsPersistense.h"
+#import "LMStatsReporter.h"
 
 
 @interface AppDelegate ()
 @property (nonatomic, strong) LMStatsTracker *trackerDelegate;
 @property (nonatomic, strong) LMStatsPersistense *statsPersistence;
+@property (nonatomic, strong) LMStatsReporter *statsReporter;
 @end
 
 @implementation AppDelegate
@@ -23,9 +24,11 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     
-    self.trackerDelegate = [[LMStatsTracker alloc] init];
     self.statsPersistence = [[LMStatsPersistense alloc] init];
+    self.trackerDelegate = [[LMStatsTracker alloc] init];
     self.trackerDelegate.persistance = self.statsPersistence;
+    
+    self.statsReporter = [[LMStatsReporter alloc] initWithLMStatsPersistense:self.statsPersistence];
     
     [UIViewController setTrackerDelegate:self.trackerDelegate];
     
@@ -37,6 +40,8 @@
     self.window.rootViewController = nc;
     
     [self.window makeKeyAndVisible];
+    
+    [self.statsReporter reportAllUnreportedStats];
     
     return YES;
 }
@@ -57,7 +62,6 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-    [self.statsPersistence debugLogAllSavedStats];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {

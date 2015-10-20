@@ -7,6 +7,7 @@
 //
 
 #import "LMStatsPersistense.h"
+#import "NSDictionary+UrlEncoding.h"
 
 @interface LMStatsPersistense()
 
@@ -24,6 +25,11 @@
     NSString *filePath = [self.directory stringByAppendingPathComponent:fileName];
     
     BOOL archived = [NSKeyedArchiver archiveRootObject:statistics toFile:filePath];
+    
+    if (archived) {
+    
+        [_observer LMStatsPersistense:self didSaveNewStats:statistics toFile:filePath];
+    }
     
     return archived;
 }
@@ -52,7 +58,6 @@
 - (NSArray *)allSavedStats{
 
     NSError *error = nil;
-    
     NSArray *files = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:self.directory error:&error];
     
     
@@ -77,6 +82,25 @@
     
     return allParts;
 }
+
+- (BOOL)deleteAllSavedStats{
+
+
+    NSFileManager *fm = [NSFileManager defaultManager];
+    NSError *error = nil;
+    NSArray *files = [fm contentsOfDirectoryAtPath:self.directory error:&error];
+
+        for (NSString *fileName in files) {
+        
+            NSString *filePath = [self.directory stringByAppendingPathComponent:fileName];
+            [fm removeItemAtPath:filePath error:&error];
+            if (error) {
+                return NO;
+            }
+    }
+    
+    return YES;
+}
 - (void)debugLogAllSavedStats{
 
     NSArray *allParts = [self allSavedStats];
@@ -84,9 +108,11 @@
     int j = 1;
     
     NSLog(@"Merged:");
-    for (LMStatsDuration *ds in allParts) {
+    for (LMStats *ds in allParts) {
         
-        NSLog(@"%i. %@ => %.2f sec (count: %i)", j, ds.identifierString, ds.duration, ds.resumeCount);
+        NSString *iString = [(NSDictionary *)ds.userInfo stringWithKeyValueSeparator:@"_" valuesSeparator:@"," urlEncode:NO];
+        
+        NSLog(@"%i. %@ => %.2f sec (count: %i)", j, iString, ds.duration, ds.resumeCount);
         j++;
     }
     

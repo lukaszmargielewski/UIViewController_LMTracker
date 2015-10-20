@@ -10,7 +10,7 @@
 
 @class LMUIVCTracker;
 
-@interface LMStatsDuration : NSObject<NSCopying, NSCoding>
+@interface LMStats : NSObject<NSCopying, NSCoding>
 
 @property (nonatomic, readonly) double tStart;
 @property (nonatomic, readonly) double tEnd;
@@ -21,10 +21,8 @@
 @property (nonatomic) BOOL visible;
 
 @property (nonatomic, readonly, nonnull) id <NSCopying> userInfo;
-@property (nonatomic, readonly, nonnull)  NSString *identifierString;
 
-- (instancetype)initStatsForUserInfo:(nonnull id<NSCopying>)userInfo
-                    identifierString:(nonnull NSString *)idString;
+- (instancetype)initStatsForUserInfo:(nonnull id<NSCopying>)userInfo;
 
 
 - (void)pauseTime;

@@ -55,19 +55,21 @@
 - (void)UIViewController:(UIViewController *)viewController
     didDealocWithTracker:(LMUIVCTracker *)tracker{
     
-    LMStatsDuration *stats = [self statsForViewController:viewController tracker:tracker createIfNeeded:NO];
+    LMStats *stats = [self statsForViewController:viewController tracker:tracker createIfNeeded:NO];
     
     if (stats) {
 
         stats.visible = NO;
         [stats pauseTime];
         
-        NSLog(@"%@ will dealloc with user info: %@", NSStringFromClass(viewController.class), stats.identifierString);
+        NSString *iString = [(NSDictionary *)stats.userInfo stringWithKeyValueSeparator:@"_" valuesSeparator:@"," urlEncode:NO];
+        
+        NSLog(@"%@ will dealloc with user info: %@", NSStringFromClass(viewController.class), iString);
         [self debugLogAllDurations];
     }
 }
 
-- (LMStatsDuration *)statsForViewController:(UIViewController *)viewController
+- (LMStats *)statsForViewController:(UIViewController *)viewController
                                            tracker:(LMUIVCTracker *)tracker
                                     createIfNeeded:(BOOL)createIfNeeded{
 
@@ -82,21 +84,23 @@
     NSString *pointerKey = [NSString stringWithFormat:@"pointer_%li", pointer_as_integer];
     NSString *key = pointerKey;
     
-    
-    // DISCUSSION:
-    // In this tracking mechanism, userInfo decides about identity (not the object pointer):
-    NSString *iString = [userInfo stringWithKeyValueSeparator:@"_" valuesSeparator:@"," urlEncode:NO];
-    //NSString *key = iString;
-    
-    LMStatsDuration *stats = self.trackingDictionary[key];
+    LMStats *stats = self.trackingDictionary[key];
     
     if (!stats && createIfNeeded && tracker.userInfo) {
         
-        stats = [[LMStatsDuration alloc] initStatsForUserInfo:tracker.userInfo identifierString:iString];
+        stats = [[LMStats alloc] initStatsForUserInfo:tracker.userInfo];
         self.trackingDictionary[key] = stats;
     }
 
     return stats;
+}
+- (void)addStatsWithUserInfo:(NSDictionary *)userInfo{
+
+    NSString *iString = [(NSDictionary *)userInfo stringWithKeyValueSeparator:@"_" valuesSeparator:@"," urlEncode:NO];
+    LMStats *stats = [[LMStats alloc] initStatsForUserInfo:userInfo];
+    NSString *key = [NSString stringWithFormat:@"manual_%@", iString];
+    self.trackingDictionary[key] = stats;
+    
 }
 
 
@@ -105,7 +109,7 @@
              withTracker:(LMUIVCTracker *)tracker{
     
     
-    LMStatsDuration *stats = [self statsForViewController:viewController tracker:tracker createIfNeeded:YES];
+    LMStats *stats = [self statsForViewController:viewController tracker:tracker createIfNeeded:YES];
     stats.visible = YES;
     [stats resumeTime];
     
@@ -122,9 +126,10 @@
     }
     
     
-    LMStatsDuration *stats = [self statsForViewController:viewController tracker:tracker createIfNeeded:NO];
+    LMStats *stats = [self statsForViewController:viewController tracker:tracker createIfNeeded:NO];
     stats.visible = NO;
-    NSLog(@"MIHStatsTracker %@ viewWillDisappear: %@", NSStringFromClass(viewController.class), stats.identifierString);
+    NSString *iString = [(NSDictionary *)stats.userInfo stringWithKeyValueSeparator:@"_" valuesSeparator:@"," urlEncode:NO];
+    NSLog(@"MIHStatsTracker %@ viewWillDisappear: %@", NSStringFromClass(viewController.class), iString);
     
     [stats pauseTime];
 }
@@ -181,8 +186,10 @@
         
         for (NSString *key in allKeys) {
             
-            LMStatsDuration *ds = self.trackingDictionary[key];
-            NSLog(@"%i. %@ => %.2f count: %i (v: %i, p: %i)", i, ds.identifierString, ds.duration, ds.resumeCount, ds.visible, ds.paused);
+            LMStats *ds = self.trackingDictionary[key];
+            NSString *iString = [(NSDictionary *)ds.userInfo stringWithKeyValueSeparator:@"_" valuesSeparator:@"," urlEncode:NO];
+            
+            NSLog(@"%i. %@ => %.2f count: %i (v: %i, p: %i)", i, iString, ds.duration, ds.resumeCount, ds.visible, ds.paused);
             i++;
         }
         
@@ -197,7 +204,7 @@
 
     for (NSString *key in self.trackingDictionary.allKeys) {
         
-        LMStatsDuration *ds = self.trackingDictionary[key];
+        LMStats *ds = self.trackingDictionary[key];
 
         [ds pauseTime];
     }
@@ -207,7 +214,7 @@
 
     for (NSString *key in self.trackingDictionary.allKeys) {
         
-        LMStatsDuration *ds = self.trackingDictionary[key];
+        LMStats *ds = self.trackingDictionary[key];
         
         if (ds.visible) {
         
@@ -220,7 +227,7 @@
     
     for (NSString *key in self.trackingDictionary.allKeys) {
         
-        LMStatsDuration *ds = self.trackingDictionary[key];
+        LMStats *ds = self.trackingDictionary[key];
         
         if (ds.visible) {
         
@@ -244,7 +251,7 @@
     
     for (NSString *key in self.trackingDictionary.allKeys) {
         
-        LMStatsDuration *ds = self.trackingDictionary[key];
+        LMStats *ds = self.trackingDictionary[key];
         [ds updateDuration];
         [set addObject:[ds copy]];
     }

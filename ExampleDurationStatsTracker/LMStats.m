@@ -6,7 +6,7 @@
 //  Copyright © 2015 Lukasz Margielewski. All rights reserved.
 //
 
-#import "LMStatsDuration.h"
+#import "LMStats.h"
 #import <Foundation/Foundation.h>
 
 static inline double trackerGetTimeNow(){
@@ -16,13 +16,13 @@ static inline double trackerGetTimeNow(){
 }
 
 
-@interface LMStatsDuration()
+@interface LMStats()
 
 - (void)setDuration:(double)duration;
 
 @end
 
-@implementation LMStatsDuration{
+@implementation LMStats{
 
     double _referenceTime;
 }
@@ -30,7 +30,6 @@ static inline double trackerGetTimeNow(){
 @synthesize duration = _duration;
 @synthesize paused = _paused;
 @synthesize userInfo =_userInfo;
-@synthesize identifierString = _identifierString;
 @synthesize resumeCount = _resumeCount;
 
 - (void)setDuration:(double)duration{
@@ -46,10 +45,6 @@ static inline double trackerGetTimeNow(){
 
     _resumeCount = resumeCount;
 }
-- (void)setIdentifierString:(NSString *)identifierString{
-
-    _identifierString = [identifierString copy];
-}
 - (void)setTEnd:(double)tEnd{
 
     _tEnd = tEnd;
@@ -59,18 +54,15 @@ static inline double trackerGetTimeNow(){
     _tStart = tStart;
 }
 
-- (instancetype)initStatsForUserInfo:(nonnull id<NSCopying>)userInfo
-                    identifierString:(nonnull NSString *)idString{
+- (instancetype)initStatsForUserInfo:(nonnull id<NSCopying>)userInfo{
 
     NSAssert(userInfo != nil, @"userInfo must NOT be nil.");
-    NSAssert(userInfo != nil, @"identifierString must NOT be nil.");
     
     self = [super init];
     
     if (self) {
         
         _userInfo = [userInfo copyWithZone:nil];
-        _identifierString = [idString copy];
         _tEnd = _tStart = 0;
         [self resetDurationAndResumeCount];
     }
@@ -91,11 +83,10 @@ static inline double trackerGetTimeNow(){
 */
 - (id _Nonnull)copyWithZone:(NSZone * _Nullable)zone{
 
-    LMStatsDuration *copiedObject = [[LMStatsDuration alloc] init];
+    LMStats *copiedObject = [[LMStats alloc] init];
     
     [copiedObject setDuration:self.duration];
     [copiedObject setUserInfo:self.userInfo];
-    [copiedObject setIdentifierString:self.identifierString];
     [copiedObject setResumeCount:self.resumeCount];
     [copiedObject setTStart:self.tStart];
     [copiedObject setTEnd:self.tEnd];
@@ -105,8 +96,6 @@ static inline double trackerGetTimeNow(){
 
 - (void)encodeWithCoder:(NSCoder *)enCoder{
     
-    
-    [enCoder encodeObject:_identifierString forKey:@"is"];
     [enCoder encodeObject:_userInfo forKey:@"ui"];
     
     [enCoder encodeDouble:_duration forKey:@"du"];
@@ -124,11 +113,8 @@ static inline double trackerGetTimeNow(){
     
     if(self = [super init]) {
         
-        NSString *idString = [aDecoder decodeObjectForKey:@"is"];
         NSDictionary *ui = [aDecoder decodeObjectForKey:@"ui"];
-        
         _userInfo = ui;
-        _identifierString = idString;
         _duration = [aDecoder decodeDoubleForKey:@"du"];
         _resumeCount = [aDecoder decodeIntegerForKey:@"rc"];
         _tStart = [aDecoder decodeDoubleForKey:@"ts"];

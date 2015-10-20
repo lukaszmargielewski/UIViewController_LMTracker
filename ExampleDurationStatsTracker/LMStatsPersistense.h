@@ -9,9 +9,25 @@
 #import <Foundation/Foundation.h>
 #import "LMStatsTracker.h"
 
+@class LMStatsPersistense;
+
+@protocol LMStatsPersistenseObserver <NSObject>
+
+- (void)LMStatsPersistense:(LMStatsPersistense *)statsPersistence
+                         didSaveNewStats:(NSArray<LMStats *> *)stats
+                                  toFile:(NSString *)filePath;
+
+@end
+
+
 @interface LMStatsPersistense : NSObject<LMStatsTrackerPersistance>
 
+@property (nonatomic, assign) id<LMStatsPersistenseObserver>observer;
+
 - (NSArray *)allSavedStats;
+- (BOOL)deleteAllSavedStats;
+
 - (void)debugLogAllSavedStats;
+
 
 @end

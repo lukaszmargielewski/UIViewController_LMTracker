@@ -20,7 +20,7 @@
 @end
 
 
-@interface LMStatsPersistense : NSObject<LMStatsTrackerPersistance>
+@interface LMStatsPersistense : NSObject<LMStatsTrackerPersistanceProtocol>
 
 @property (nonatomic, assign) id<LMStatsPersistenseObserver>observer;
 

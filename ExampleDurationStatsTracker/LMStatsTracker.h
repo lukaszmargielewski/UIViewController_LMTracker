@@ -10,7 +10,7 @@
 
 @class LMStatsTracker;
 
-@protocol LMStatsTrackerPersistance<NSObject>
+@protocol LMStatsTrackerPersistanceProtocol<NSObject>
 
 - (BOOL)LMStatsTracker:(LMStatsTracker *)statsTracker
      persistStatistics:(NSArray *)statistics;
@@ -20,6 +20,6 @@
 
 @interface LMStatsTracker : NSObject<UIViewControllerTrackingLifeCycleDelegate>
 
-@property (nonatomic, assign) id<LMStatsTrackerPersistance>persistance;
+@property (nonatomic, assign) id<LMStatsTrackerPersistanceProtocol>persistance;
 
 @end

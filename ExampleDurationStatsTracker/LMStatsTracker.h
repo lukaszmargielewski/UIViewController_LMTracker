@@ -4,7 +4,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "UIViewController+LMUIVCTracker.h"
+#import "UIViewController+TrackingLifeCycle.h"
 #import "LMStats.h"
 
 
@@ -18,10 +18,8 @@
 @end
 
 
-@interface LMStatsTracker : NSObject<LMUIVCTrackerDelegate>
+@interface LMStatsTracker : NSObject<UIViewControllerTrackingLifeCycleDelegate>
 
 @property (nonatomic, assign) id<LMStatsTrackerPersistance>persistance;
-
-- (void)addStatsWithUserInfo:(NSDictionary *)userInfo;
 
 @end

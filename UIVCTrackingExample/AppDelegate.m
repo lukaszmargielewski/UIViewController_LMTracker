@@ -10,8 +10,6 @@
 #import "LMStatsTracker.h"
 #import "ViewController.h"
 #import "LMStatsReporter.h"
-#import "UIViewController+LMStatsTracker.h"
-
 
 @interface AppDelegate ()
 @property (nonatomic, strong) LMStatsTracker *statsTracker;
@@ -30,12 +28,10 @@
     self.statsTracker.persistance = self.statsPersistence;
     
     self.statsReporter = [[LMStatsReporter alloc] initWithLMStatsPersistense:self.statsPersistence];
-    
-    [UIViewController setDefaultStatsTracker:self.statsTracker];
     [UIViewController setTrackerDelegate:self.statsTracker];
     
     ViewController *vc = [[ViewController alloc] init];
-    vc.tracker.userInfo = @{@"stack" : @(0)};
+    vc.trackedInfo = @{@"stack" : @(0)};
     UINavigationController *nc = [[UINavigationController alloc] initWithRootViewController:vc];
     
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];

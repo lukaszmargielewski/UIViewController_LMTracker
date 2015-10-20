@@ -2,26 +2,43 @@
 //  Created by Lukasz Margielewski on 05/06/15.
 //
 
-#import "UIViewController+LMUIVCTracker.h"
+#import "UIViewController+TrackingLifeCycle.h"
 #import "NSObject+Swizzle.h"
 #import <objc/runtime.h>
 
 #define DLog //DLog
 
+
+#pragma mark - Internal Tracking Object Class:
+
+@interface LMUIVCTracker : NSObject
+
+-(instancetype)initWithViewController:(UIViewController *)viewController;
+
+@property (nonatomic, assign, readonly) UIViewController *viewController;
+@property (nonatomic, strong) NSDictionary *userInfo;
+
+@property (nonatomic, readonly, getter=isVisible) BOOL visible;
+@end
+
 @interface LMUIVCTracker()
 - (void)setVisible:(BOOL)visible;
-
 @end
+
+
+#pragma mark - Main Implementation:
 
 @interface UIViewController()
-
-//- (id)stats_initWithNibName:(NSString *)nibName bundle:(NSBundle *)bundle;
+@property (nonatomic, readonly) LMUIVCTracker *tracker;
 
 @end
 
-@implementation UIViewController(LMUIVCTracker)
+@implementation UIViewController(TrackingLifeCycle)
 
-static id<LMUIVCTrackerDelegate> _trackerDelegate;
+@dynamic trackerDelegate;
+@dynamic trackedInfo;
+
+static id<UIViewControllerTrackingLifeCycleDelegate> _trackerDelegate = nil;
 
 static char UIB_PROPERTY_KEY_DEALLOC_OBSERVER;
 
@@ -29,19 +46,38 @@ static char UIB_PROPERTY_KEY_DEALLOC_OBSERVER;
 {
     objc_setAssociatedObject(self, &UIB_PROPERTY_KEY_DEALLOC_OBSERVER, tracker, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
+- (NSDictionary *)trackedInfo{
 
+   return self.tracker.userInfo;
+}
+- (void)setTrackedInfo:(id)trackedInfo{
+
+    self.tracker.userInfo = trackedInfo;
+    
+}
 - (LMUIVCTracker *)tracker{
     
     return objc_getAssociatedObject(self, &UIB_PROPERTY_KEY_DEALLOC_OBSERVER);
 }
+- (id<UIViewControllerTrackingLifeCycleDelegate>)trackerDelegate{
 
-
-+ (void)setTrackerDelegate:(id<LMUIVCTrackerDelegate>)startsTracer{
-
-    @synchronized(self) { _trackerDelegate = startsTracer; }
+    @synchronized(self) {
+        return _trackerDelegate;
+    }
 }
 
-+ (void)load {
++ (void)setTrackerDelegate:(id<UIViewControllerTrackingLifeCycleDelegate>)startsTracer{
+
+    @synchronized(self) {
+        _trackerDelegate = startsTracer;
+    
+        if (_trackerDelegate) {
+            [self swizzleWhenTrackingEnabled];
+        }
+    }
+}
+
++ (void)swizzleWhenTrackingEnabled {
     
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -92,9 +128,9 @@ static char UIB_PROPERTY_KEY_DEALLOC_OBSERVER;
     //DLog(@"stats_viewDidLoad: %@", NSStringFromClass(self.class));
     [self stats_viewDidLoad];
     
-    if (_trackerDelegate && [_trackerDelegate respondsToSelector:@selector(UIViewController:viewDidLoadWithTracker:)]) {
+    if (_trackerDelegate && [_trackerDelegate respondsToSelector:@selector(UIViewControllerViewDidLoad:)]) {
         
-        [_trackerDelegate UIViewController:self viewDidLoadWithTracker:self.tracker];
+        [_trackerDelegate UIViewControllerViewDidLoad:self];
     }
     
     
@@ -104,9 +140,9 @@ static char UIB_PROPERTY_KEY_DEALLOC_OBSERVER;
     //DLog(@"stats_viewWillAppear: %@", NSStringFromClass(self.class));
     [self stats_viewWillAppear:animated];
     
-    if (_trackerDelegate && [_trackerDelegate respondsToSelector:@selector(UIViewController:viewWillAppear:withTracker:)]) {
+    if (_trackerDelegate && [_trackerDelegate respondsToSelector:@selector(UIViewController:viewWillAppear:)]) {
         
-        [_trackerDelegate UIViewController:self viewWillAppear:animated withTracker:self.tracker];
+        [_trackerDelegate UIViewController:self viewWillAppear:animated];
     }
     
 }
@@ -114,9 +150,9 @@ static char UIB_PROPERTY_KEY_DEALLOC_OBSERVER;
     
     //DLog(@"stats_viewDidAppear: %@", NSStringFromClass(self.class));
     [self stats_viewDidAppear:animated];
-    if (_trackerDelegate && [_trackerDelegate respondsToSelector:@selector(UIViewController:viewDidAppear:withTracker:)]) {
+    if (_trackerDelegate && [_trackerDelegate respondsToSelector:@selector(UIViewController:viewDidAppear:)]) {
      
-        [_trackerDelegate UIViewController:self viewDidAppear:animated withTracker:self.tracker];
+        [_trackerDelegate UIViewController:self viewDidAppear:animated];
     }
     
 }
@@ -127,9 +163,9 @@ static char UIB_PROPERTY_KEY_DEALLOC_OBSERVER;
     [self stats_viewWillDisappear:animated];
     
     
-    if (_trackerDelegate && [_trackerDelegate respondsToSelector:@selector(UIViewController:viewWillDisappear:withTracker:)]) {
+    if (_trackerDelegate && [_trackerDelegate respondsToSelector:@selector(UIViewController:viewWillDisappear:)]) {
         
-        [_trackerDelegate UIViewController:self viewWillDisappear:animated withTracker:self.tracker];
+        [_trackerDelegate UIViewController:self viewWillDisappear:animated];
     }
     
     
@@ -143,9 +179,9 @@ static char UIB_PROPERTY_KEY_DEALLOC_OBSERVER;
     
     
     
-    if (_trackerDelegate && [_trackerDelegate respondsToSelector:@selector(UIViewController:viewDidDisappear:withTracker:)]) {
+    if (_trackerDelegate && [_trackerDelegate respondsToSelector:@selector(UIViewController:viewDidDisappear:)]) {
         
-        [_trackerDelegate UIViewController:self viewDidDisappear:animated withTracker:self.tracker];
+        [_trackerDelegate UIViewController:self viewDidDisappear:animated];
     }
 }
 
@@ -171,9 +207,9 @@ static char UIB_PROPERTY_KEY_DEALLOC_OBSERVER;
 - (void)dealloc{
     
     
-    if (_trackerDelegate && [_trackerDelegate respondsToSelector:@selector(UIViewController:didDealocWithTracker:)]) {
+    if (_trackerDelegate && [_trackerDelegate respondsToSelector:@selector(UIViewControllerDidDealloc:)]) {
         
-        [_trackerDelegate UIViewController:self.viewController didDealocWithTracker:self];
+        [_trackerDelegate UIViewControllerDidDealloc:self.viewController];
     }
     
     

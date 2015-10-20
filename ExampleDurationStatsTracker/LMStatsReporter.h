@@ -10,7 +10,7 @@
 #import "LMStatsPersistense.h"
 
 @interface LMStatsReporter : NSObject<LMStatsPersistenseObserver>
-@property (nonatomic, readonly) LMStatsPersistense *persistence;
+@property (nonatomic, readonly, nonnull) LMStatsPersistense *persistence;
 
 - (instancetype)initWithLMStatsPersistense:(nonnull LMStatsPersistense *)persistence;
 - (void)reportAllUnreportedStats;

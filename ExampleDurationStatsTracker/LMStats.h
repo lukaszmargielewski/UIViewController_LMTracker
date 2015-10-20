@@ -8,8 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
-@class LMUIVCTracker;
-
 @interface LMStats : NSObject<NSCopying, NSCoding>
 
 @property (nonatomic, readonly) double tStart;
@@ -19,11 +17,9 @@
 
 @property (nonatomic, readonly, getter=isPaused) BOOL paused;
 @property (nonatomic) BOOL visible;
+@property (nonatomic) BOOL supportsDuration;
 
-@property (nonatomic, readonly, nonnull) id <NSCopying> userInfo;
-
-- (instancetype)initStatsForUserInfo:(nonnull id<NSCopying>)userInfo;
-
+@property (nonatomic, strong) NSDictionary *userInfo;
 
 - (void)pauseTime;
 - (void)resumeTime;

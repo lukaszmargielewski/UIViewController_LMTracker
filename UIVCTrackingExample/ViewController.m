@@ -7,7 +7,7 @@
 //
 
 #import "ViewController.h"
-#import "UIViewController+LMStatsTracker.h"
+#import "UIViewController+TrackingLifeCycle.h"
 
 @interface ViewController ()
 
@@ -54,10 +54,9 @@
 - (void)addStats:(UIButton *)button{
 
     NSUInteger count = self.navigationController.viewControllers.count;
-    NSDictionary *userInfo = @{@"stack" : @(count), @"manual" : @(YES)};
+    NSDictionary *userInfo = @{@"manual" : self.title};
     
-    [self.statsTracker addStatsWithUserInfo:userInfo];
-    
+    [self.trackerDelegate addStatsWithUserInfo:userInfo];
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -65,7 +64,7 @@
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Push" style:UIBarButtonItemStyleDone target:self action:@selector(push:)];
     
-    self.title = [NSString stringWithFormat:@"Controller nr %@", self.tracker.userInfo[@"stack"]];
+    self.title = [NSString stringWithFormat:@"Controller nr %@", self.trackedInfo[@"stack"]];
     
 }
 - (void)push:(id)sender{
@@ -73,7 +72,7 @@
     ViewController *vc = [[ViewController alloc] init];
     
     NSUInteger count = self.navigationController.viewControllers.count;
-    vc.tracker.userInfo = @{@"stack" : @(count)};
+    vc.trackedInfo = @{@"stack" : @(count)};
     [self.navigationController pushViewController:vc animated:YES];
     
 }

@@ -29,7 +29,6 @@ static inline double trackerGetTimeNow(){
 
 @synthesize duration = _duration;
 @synthesize paused = _paused;
-@synthesize userInfo =_userInfo;
 @synthesize resumeCount = _resumeCount;
 
 - (void)setDuration:(double)duration{
@@ -37,10 +36,7 @@ static inline double trackerGetTimeNow(){
     _duration = duration;
 }
 
-- (void)setUserInfo:(id<NSCopying>)userInfo{
-    
-    _userInfo = [userInfo copyWithZone:nil];
-}
+
 - (void)setResumeCount:(NSUInteger)resumeCount{
 
     _resumeCount = resumeCount;
@@ -54,15 +50,12 @@ static inline double trackerGetTimeNow(){
     _tStart = tStart;
 }
 
-- (instancetype)initStatsForUserInfo:(nonnull id<NSCopying>)userInfo{
-
-    NSAssert(userInfo != nil, @"userInfo must NOT be nil.");
+- (instancetype)init{
     
     self = [super init];
     
     if (self) {
         
-        _userInfo = [userInfo copyWithZone:nil];
         [self resetDurationAndResumeCount];
         _tEnd = _tStart = _referenceTime;
     }
@@ -145,6 +138,11 @@ static inline double trackerGetTimeNow(){
         if (_tStart == 0) {
             _tStart = _referenceTime;
         }
+    }else{
+    
+        if (_resumeCount == 0) {
+            _resumeCount++;
+        }
     }
    
 }
@@ -158,7 +156,7 @@ static inline double trackerGetTimeNow(){
 }
 - (void)updateDuration{
     
-    if (_paused)return;
+    if (_paused || !_supportsDuration)return;
     
     _tEnd = trackerGetTimeNow();
     double timePassed = _tEnd - _referenceTime;

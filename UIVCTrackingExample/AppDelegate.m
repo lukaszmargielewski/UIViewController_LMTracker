@@ -10,10 +10,11 @@
 #import "LMStatsTracker.h"
 #import "ViewController.h"
 #import "LMStatsReporter.h"
+#import "UIViewController+LMStatsTracker.h"
 
 
 @interface AppDelegate ()
-@property (nonatomic, strong) LMStatsTracker *trackerDelegate;
+@property (nonatomic, strong) LMStatsTracker *statsTracker;
 @property (nonatomic, strong) LMStatsPersistense *statsPersistence;
 @property (nonatomic, strong) LMStatsReporter *statsReporter;
 @end
@@ -25,12 +26,13 @@
     // Override point for customization after application launch.
     
     self.statsPersistence = [[LMStatsPersistense alloc] init];
-    self.trackerDelegate = [[LMStatsTracker alloc] init];
-    self.trackerDelegate.persistance = self.statsPersistence;
+    self.statsTracker = [[LMStatsTracker alloc] init];
+    self.statsTracker.persistance = self.statsPersistence;
     
     self.statsReporter = [[LMStatsReporter alloc] initWithLMStatsPersistense:self.statsPersistence];
     
-    [UIViewController setTrackerDelegate:self.trackerDelegate];
+    [UIViewController setDefaultStatsTracker:self.statsTracker];
+    [UIViewController setTrackerDelegate:self.statsTracker];
     
     ViewController *vc = [[ViewController alloc] init];
     vc.tracker.userInfo = @{@"stack" : @(0)};

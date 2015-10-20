@@ -63,8 +63,8 @@ static inline double trackerGetTimeNow(){
     if (self) {
         
         _userInfo = [userInfo copyWithZone:nil];
-        _tEnd = _tStart = 0;
         [self resetDurationAndResumeCount];
+        _tEnd = _tStart = _referenceTime;
     }
     return self;
     
@@ -115,6 +115,7 @@ static inline double trackerGetTimeNow(){
         
         NSDictionary *ui = [aDecoder decodeObjectForKey:@"ui"];
         _userInfo = ui;
+        
         _duration = [aDecoder decodeDoubleForKey:@"du"];
         _resumeCount = [aDecoder decodeIntegerForKey:@"rc"];
         _tStart = [aDecoder decodeDoubleForKey:@"ts"];
@@ -150,6 +151,7 @@ static inline double trackerGetTimeNow(){
 
 - (void)resetDurationAndResumeCount{
 
+    _tEnd = _tStart = 0;
     _referenceTime = trackerGetTimeNow();
     _duration = 0;
     _resumeCount = 0;

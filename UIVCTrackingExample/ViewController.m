@@ -7,7 +7,7 @@
 //
 
 #import "ViewController.h"
-#import "UIViewController_LMUIVCTracker.h"
+#import "UIViewController+LMStatsTracker.h"
 
 @interface ViewController ()
 
@@ -43,6 +43,21 @@
             break;
     }
     self.view.backgroundColor = color;
+    
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    [button setTitle:@"Add extra stats" forState:UIControlStateNormal];
+    [button addTarget:self action:@selector(addStats:) forControlEvents:UIControlEventTouchUpInside];
+    button.frame = CGRectMake(20, 100, 280, 50);
+    [self.view addSubview:button];
+    
+}
+- (void)addStats:(UIButton *)button{
+
+    NSUInteger count = self.navigationController.viewControllers.count;
+    NSDictionary *userInfo = @{@"stack" : @(count), @"manual" : @(YES)};
+    
+    [self.statsTracker addStatsWithUserInfo:userInfo];
+    
 }
 - (void)viewDidLoad {
     [super viewDidLoad];

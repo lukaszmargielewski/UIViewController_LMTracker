@@ -2,7 +2,7 @@
 //  Created by Lukasz Margielewski on 05/06/15.
 //
 
-#import "UIViewController_LMUIVCTracker.h"
+#import "UIViewController+LMUIVCTracker.h"
 #import "NSObject+Swizzle.h"
 #import <objc/runtime.h>
 

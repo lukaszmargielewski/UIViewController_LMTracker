@@ -4,7 +4,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "UIViewController_LMUIVCTracker.h"
+#import "UIViewController+LMUIVCTracker.h"
 #import "LMStats.h"
 
 

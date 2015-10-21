@@ -19,7 +19,10 @@
 
 - (BOOL)LMStatsTracker:(LMStatsTracker *)statsTracker persistStatistics:(NSArray *)statistics{
 
-    //TODO: Implement saving stats to files:
+
+    if (!statistics || !statistics.count) {
+        return NO;
+    }
     
     NSString *fileName = [NSString stringWithFormat:@"%f.stats", [NSDate date].timeIntervalSince1970];
     NSString *filePath = [self.directory stringByAppendingPathComponent:fileName];

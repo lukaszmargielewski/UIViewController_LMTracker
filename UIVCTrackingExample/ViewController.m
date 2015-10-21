@@ -53,9 +53,7 @@
 }
 - (void)addStats:(UIButton *)button{
 
-    NSUInteger count = self.navigationController.viewControllers.count;
-    NSDictionary *userInfo = @{@"manual" : self.title};
-    
+    NSDictionary *userInfo = @{@"manual" : self.title};    
     [self.trackerDelegate addStatsWithUserInfo:userInfo];
 }
 - (void)viewDidLoad {

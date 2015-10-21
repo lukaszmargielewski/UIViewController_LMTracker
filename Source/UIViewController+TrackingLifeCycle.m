@@ -82,11 +82,9 @@ static char UIB_PROPERTY_KEY_DEALLOC_OBSERVER;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         
-        DLog(@"loading class: %@", NSStringFromClass([self class]));
-        //[self swizzleInstanceSelector:@selector(dealloc) withSelector:@selector(stats_dealloc)];
         [self swizzleInstanceSelector:@selector(viewDidLoad) withSelector:@selector(stats_viewDidLoad)];
         [self swizzleInstanceSelector:@selector(init) withSelector:@selector(stats_init)];
-        [self swizzleInstanceSelector:@selector(initWithName:bundle:) withSelector:@selector(stats_initWithName:bundle:)];
+        [self swizzleInstanceSelector:@selector(initWithName:bundle:) withSelector:@selector(stats_initWithNibName:bundle:)];
         [self swizzleInstanceSelector:@selector(viewWillAppear:) withSelector:@selector(stats_viewWillAppear:)];
         [self swizzleInstanceSelector:@selector(viewDidAppear:) withSelector:@selector(stats_viewDidAppear:)];
         [self swizzleInstanceSelector:@selector(viewWillDisappear:) withSelector:@selector(stats_viewWillDisappear:)];

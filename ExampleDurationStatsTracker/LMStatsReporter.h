@@ -12,7 +12,7 @@
 @interface LMStatsReporter : NSObject<LMStatsPersistenseObserver>
 @property (nonatomic, readonly, nonnull) LMStatsPersistense *persistence;
 
-- (instancetype)initWithLMStatsPersistense:(nonnull LMStatsPersistense *)persistence;
+- (nonnull instancetype)initWithLMStatsPersistense:(nonnull LMStatsPersistense *)persistence;
 - (void)reportAllUnreportedStats;
 
 @end

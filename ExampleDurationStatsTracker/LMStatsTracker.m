@@ -5,7 +5,7 @@
 #import "LMStatsTracker.h"
 #import "NSDictionary+UrlEncoding.h"
 
-#define LMStatsTracker_DEBUG 1
+//#define LMStatsTracker_DEBUG 1
 
 #ifdef LMStatsTracker_DEBUG
     #define DLog NSLog

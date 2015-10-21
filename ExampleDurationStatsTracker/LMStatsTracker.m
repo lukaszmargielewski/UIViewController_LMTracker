@@ -5,7 +5,9 @@
 #import "LMStatsTracker.h"
 #import "NSDictionary+UrlEncoding.h"
 
-#ifdef DEBUG
+#define LMStatsTracker_DEBUG 1
+
+#ifdef LMStatsTracker_DEBUG
     #define DLog NSLog
 #else
     #define DLog //
@@ -64,20 +66,20 @@
     // When UIViewController dealocates, its .trackedInfo property will be alraedy deallocated.
     // Therefore, use trackedInfo passed as method parameter instead....
     
-    NSString *iString = [(NSDictionary *)trackedInfo stringWithKeyValueSeparator:@"_" valuesSeparator:@"," urlEncode:NO];
-    //DLog(@"%@ will dealloc: %@ - start", NSStringFromClass(viewController.class), iString);
+    NSString *iString = [(NSDictionary *)trackedInfo stringWithKeyValueSeparator:@": " valuesSeparator:@", " urlEncode:NO];
+    DLog(@"%@ will dealloc: [%@]", NSStringFromClass(viewController.class), iString);
 
     
     [self pauseStatsForViewController:viewController trackedInfo:trackedInfo];
-
-    iString = [(NSDictionary *)trackedInfo stringWithKeyValueSeparator:@"_" valuesSeparator:@"," urlEncode:NO];
-    //DLog(@"%@ will dealloc: %@ - end", NSStringFromClass(viewController.class), iString);
 
     
     [self debugLogAllDurations];
     
 }
 - (void)UIViewController:(UIViewController *)viewController viewDidAppear:(BOOL)animated{
+    
+    NSString *iString = [(NSDictionary *)viewController.tracker.trackedInfo stringWithKeyValueSeparator:@": " valuesSeparator:@", " urlEncode:NO];
+    DLog(@"%@ viewDidAppear: [%@]", NSStringFromClass(viewController.class), iString);
     
     LMStats *stats = [self statsForViewController:viewController createIfNeeded:YES];
     stats.visible = YES;
@@ -86,13 +88,10 @@
 }
 - (void)UIViewController:(UIViewController *)viewController viewWillDisappear:(BOOL)animated{
     
-    NSString *iString = [(NSDictionary *)viewController.tracker.trackedInfo stringWithKeyValueSeparator:@"_" valuesSeparator:@"," urlEncode:NO];
-    //DLog(@"%@ viewWillDisappear - start: %@", NSStringFromClass(viewController.class), iString);
+    NSString *iString = [(NSDictionary *)viewController.tracker.trackedInfo stringWithKeyValueSeparator:@": " valuesSeparator:@", " urlEncode:NO];
+    DLog(@"%@ viewWillDisappear: [%@]", NSStringFromClass(viewController.class), iString);
     
     [self pauseStatsForViewController:viewController trackedInfo:viewController.tracker.trackedInfo];
-    
-    iString = [(NSDictionary *)viewController.tracker.trackedInfo stringWithKeyValueSeparator:@"_" valuesSeparator:@"," urlEncode:NO];
-    //DLog(@"%@ viewWillDisappear - end: %@", NSStringFromClass(viewController.class), iString);
 }
 
 
@@ -159,7 +158,7 @@
 
 - (void)addStatsWithUserInfo:(NSDictionary *)userInfo{
 
-    NSString *iString = [(NSDictionary *)userInfo stringWithKeyValueSeparator:@"_" valuesSeparator:@"," urlEncode:NO];
+    NSString *iString = [(NSDictionary *)userInfo stringWithKeyValueSeparator:@"_" valuesSeparator:@"_" urlEncode:NO];
     LMStats *stats = [[LMStats alloc] init];
     stats.userInfo = userInfo;
     NSString *key = [NSString stringWithFormat:@"manual_%@", iString];
@@ -220,7 +219,7 @@
         for (NSString *key in allKeys) {
             
             LMStats *ds = self.trackingDictionary[key];
-            NSString *iString = [(NSDictionary *)ds.userInfo stringWithKeyValueSeparator:@"_" valuesSeparator:@"," urlEncode:NO];
+            NSString *iString = [(NSDictionary *)ds.userInfo stringWithKeyValueSeparator:@": " valuesSeparator:@", " urlEncode:NO];
             
             //DLog(@"%i. %@ => %.2f count: %i (v: %i, p: %i)", i, iString, ds.duration, ds.resumeCount, ds.visible, ds.paused);
             i++;

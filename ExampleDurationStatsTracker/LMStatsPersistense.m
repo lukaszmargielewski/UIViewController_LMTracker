@@ -119,9 +119,9 @@
     NSLog(@"Merged %lu parts:", (unsigned long)allParts.count);
     for (LMStats *ds in allParts) {
         
-        NSString *iString = [(NSDictionary *)ds.userInfo stringWithKeyValueSeparator:@"_" valuesSeparator:@"," urlEncode:NO];
+        NSString *iString = [(NSDictionary *)ds.userInfo stringWithKeyValueSeparator:@": " valuesSeparator:@", " urlEncode:NO];
         
-        NSLog(@"%i. %@ => %.2f sec (count: %i)", j, iString, ds.duration, ds.resumeCount);
+        NSLog(@"%i. [%@] => %.2f sec (count: %i)", j, iString, ds.duration, ds.resumeCount);
         j++;
     }
     

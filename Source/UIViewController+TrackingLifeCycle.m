@@ -73,7 +73,7 @@ static char UIB_PROPERTY_KEY_DEALLOC_OBSERVER;
         
         [self swizzleInstanceSelector:@selector(viewDidLoad) withSelector:@selector(stats_viewDidLoad)];
         [self swizzleInstanceSelector:@selector(init) withSelector:@selector(stats_init)];
-        [self swizzleInstanceSelector:@selector(initWithName:bundle:) withSelector:@selector(stats_initWithNibName:bundle:)];
+        [self swizzleInstanceSelector:@selector(initWithNibName:bundle:) withSelector:@selector(stats_initWithNibName:bundle:)];
         [self swizzleInstanceSelector:@selector(viewWillAppear:) withSelector:@selector(stats_viewWillAppear:)];
         [self swizzleInstanceSelector:@selector(viewDidAppear:) withSelector:@selector(stats_viewDidAppear:)];
         [self swizzleInstanceSelector:@selector(viewWillDisappear:) withSelector:@selector(stats_viewWillDisappear:)];
@@ -86,8 +86,6 @@ static char UIB_PROPERTY_KEY_DEALLOC_OBSERVER;
     
     [self stats_initWithNibName:nibName bundle:bundle];
     self.tracker = [[LMUIVCTracker alloc] initWithViewController:self];
-    
-    [_trackerDelegate UIViewControllerInit:self];
     
     if (_trackerDelegate && [_trackerDelegate respondsToSelector:@selector(UIViewControllerInit:)]) {
         

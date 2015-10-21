@@ -15,6 +15,10 @@
 
 @implementation ViewController
 
+- (void)dealloc{
+
+   // NSLog(@"ViewController own dealloc with trackedInfo: %@", self.trackedInfo);
+}
 - (void)loadView{
 
     self.view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
@@ -62,7 +66,7 @@
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Push" style:UIBarButtonItemStyleDone target:self action:@selector(push:)];
     
-    self.title = [NSString stringWithFormat:@"Controller nr %@", self.trackedInfo[@"stack"]];
+    self.title = [NSString stringWithFormat:@"Controller nr %@", self.tracker.trackedInfo[@"stack"]];
     
 }
 - (void)push:(id)sender{
@@ -70,7 +74,7 @@
     ViewController *vc = [[ViewController alloc] init];
     
     NSUInteger count = self.navigationController.viewControllers.count;
-    vc.trackedInfo = @{@"stack" : @(count)};
+    vc.tracker.trackedInfo = @{@"stack" : @(count)};
     [self.navigationController pushViewController:vc animated:YES];
     
 }

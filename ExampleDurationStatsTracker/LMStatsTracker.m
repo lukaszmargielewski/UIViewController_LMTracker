@@ -9,6 +9,7 @@
 @property (nonatomic, strong) NSMutableDictionary *trackingDictionary;
 @end
 
+
 @implementation LMStatsTracker
 
 - (instancetype)init{
@@ -49,47 +50,86 @@
 }
 
 
-
 #pragma mark - Delegate Metods:
 
-- (void)UIViewControllerDidDealloc:(UIViewController *)viewController{
+- (void)UIViewController:(UIViewController *)viewController willDeallocWithTrackedInfo:(NSDictionary *)trackedInfo{
     
-    LMStats *stats = [self statsForViewController:viewController createIfNeeded:NO];
     
-    if (stats) {
+    // When UIViewController dealocates, its .trackedInfo property will be alraedy deallocated.
+    // Therefore, use trackedInfo passed as method parameter instead....
+    
+    NSString *iString = [(NSDictionary *)trackedInfo stringWithKeyValueSeparator:@"_" valuesSeparator:@"," urlEncode:NO];
+    NSLog(@"%@ will dealloc: %@ - start", NSStringFromClass(viewController.class), iString);
 
-        if (viewController.trackedInfo) {
-            
-            [self removeStatsForViewController:viewController];
-        }else{
-        
-            stats.visible = NO;
-            [stats pauseTime];
-            
-        }
-        
-        NSString *iString = [(NSDictionary *)stats.userInfo stringWithKeyValueSeparator:@"_" valuesSeparator:@"," urlEncode:NO];
-        
-        NSLog(@"%@ will dealloc with user info: %@", NSStringFromClass(viewController.class), iString);
-        [self debugLogAllDurations];
-    }
+    
+    [self pauseStatsForViewController:viewController trackedInfo:trackedInfo];
+
+    iString = [(NSDictionary *)trackedInfo stringWithKeyValueSeparator:@"_" valuesSeparator:@"," urlEncode:NO];
+    NSLog(@"%@ will dealloc: %@ - end", NSStringFromClass(viewController.class), iString);
+
+    
+    [self debugLogAllDurations];
+    
 }
-- (NSString *)keyForViewController:(UIViewController *)viewController{
+- (void)UIViewController:(UIViewController *)viewController viewDidAppear:(BOOL)animated{
+    
+    LMStats *stats = [self statsForViewController:viewController createIfNeeded:YES];
+    stats.visible = YES;
+    [stats resumeTime];
+    
+}
+- (void)UIViewController:(UIViewController *)viewController viewWillDisappear:(BOOL)animated{
+    
+    NSString *iString = [(NSDictionary *)viewController.tracker.trackedInfo stringWithKeyValueSeparator:@"_" valuesSeparator:@"," urlEncode:NO];
+    NSLog(@"%@ viewWillDisappear - start: %@", NSStringFromClass(viewController.class), iString);
+    
+    [self pauseStatsForViewController:viewController trackedInfo:viewController.tracker.trackedInfo];
+    
+    iString = [(NSDictionary *)viewController.tracker.trackedInfo stringWithKeyValueSeparator:@"_" valuesSeparator:@"," urlEncode:NO];
+    NSLog(@"%@ viewWillDisappear - end: %@", NSStringFromClass(viewController.class), iString);
+}
 
+
+#pragma mark - Stats Adding / Removing:
+
+- (NSString *)keyForViewController:(UIViewController *)viewController{
+    
     uintptr_t pointer_as_integer = (uintptr_t)viewController;
     NSString *pointerKey = [NSString stringWithFormat:@"pointer_%li", pointer_as_integer];
     NSString *key = pointerKey;
-
+    
     return key;
     
 }
 
+- (void)pauseStatsForViewController:(UIViewController *)viewController
+                        trackedInfo:(NSDictionary *)trackedInfo{
+
+    NSDictionary *statsInfo = trackedInfo;
+    
+    if (!statsInfo) {
+        
+        [self removeStatsForViewController:viewController];
+        
+    }else{
+        
+        LMStats *stats = [self statsForViewController:viewController createIfNeeded:NO];
+        stats.visible = NO;
+        [stats pauseTime];
+        
+        // Update tracked info (just in case it changed in the meantime.
+        stats.userInfo = trackedInfo;
+        
+    }
+    
+}
 - (void)removeStatsForViewController:(UIViewController *)viewController{
 
     NSString *key = [self keyForViewController:viewController];
     [_trackingDictionary removeObjectForKey:key];
     
 }
+
 - (LMStats *)statsForViewController:(UIViewController *)viewController createIfNeeded:(BOOL)createIfNeeded{
 
     
@@ -97,16 +137,20 @@
     
     LMStats *stats = self.trackingDictionary[key];
     
-    if (!stats && createIfNeeded && viewController.trackedInfo) {
+    if (!stats && createIfNeeded && viewController.tracker.trackedInfo) {
         
         stats = [[LMStats alloc] init];
-        stats.userInfo = viewController.trackedInfo;
+        stats.userInfo = viewController.tracker.trackedInfo;
         stats.supportsDuration = YES;
         self.trackingDictionary[key] = stats;
     }
 
     return stats;
 }
+
+
+#pragma mark - Public API:
+
 - (void)addStatsWithUserInfo:(NSDictionary *)userInfo{
 
     NSString *iString = [(NSDictionary *)userInfo stringWithKeyValueSeparator:@"_" valuesSeparator:@"," urlEncode:NO];
@@ -115,43 +159,6 @@
     NSString *key = [NSString stringWithFormat:@"manual_%@", iString];
     self.trackingDictionary[key] = stats;
     
-}
-
-
-- (void)UIViewController:(UIViewController *)viewController
-          viewDidAppear:(BOOL)animated
-            {
-    
-    LMStats *stats = [self statsForViewController:viewController createIfNeeded:YES];
-    stats.visible = YES;
-    [stats resumeTime];
-    
-}
-
-- (void)UIViewController:(UIViewController *)viewController
-       viewWillDisappear:(BOOL)animated
-            {
-    
-    NSDictionary *statsInfo = viewController.trackedInfo;
-    
-    LMStats *stats = [self statsForViewController:viewController createIfNeeded:NO];
-                
-    if (!statsInfo) {
-                    
-            [self removeStatsForViewController:viewController];
-        
-    }else{
-                    
-        stats.visible = NO;
-        [stats pauseTime];
-        stats.userInfo = viewController.trackedInfo;
-        
-    }
-                
-    NSString *iString = [(NSDictionary *)stats.userInfo stringWithKeyValueSeparator:@"_" valuesSeparator:@"," urlEncode:NO];
-    NSLog(@"MIHStatsTracker %@ viewWillDisappear: %@", NSStringFromClass(viewController.class), iString);
-    
-    [stats pauseTime];
 }
 
 

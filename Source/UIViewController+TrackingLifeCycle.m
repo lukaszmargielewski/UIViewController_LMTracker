@@ -11,14 +11,13 @@
 
 #pragma mark - Internal Tracking Object Class:
 
-@interface LMUIVCTracker : NSObject
+@interface LMUIVCTracker : NSObject<UIViewControllerTrackingLifeCycleUserInfo>
 
--(instancetype)initWithViewController:(UIViewController *)viewController;
+- (instancetype)initWithViewController:(UIViewController *)viewController;
 
+@property (nonatomic, strong) id trackedInfo;
 @property (nonatomic, assign, readonly) UIViewController *viewController;
-@property (nonatomic, strong) NSDictionary *userInfo;
 
-@property (nonatomic, readonly, getter=isVisible) BOOL visible;
 @end
 
 @interface LMUIVCTracker()
@@ -29,33 +28,23 @@
 #pragma mark - Main Implementation:
 
 @interface UIViewController()
-@property (nonatomic, readonly) LMUIVCTracker *tracker;
 
 @end
 
 @implementation UIViewController(TrackingLifeCycle)
 
 @dynamic trackerDelegate;
-@dynamic trackedInfo;
 
 static id<UIViewControllerTrackingLifeCycleDelegate> _trackerDelegate = nil;
 
 static char UIB_PROPERTY_KEY_DEALLOC_OBSERVER;
 
-- (void)setTracker:(LMUIVCTracker *)tracker
+- (void)setTracker:(id<UIViewControllerTrackingLifeCycleUserInfo>)tracker
 {
     objc_setAssociatedObject(self, &UIB_PROPERTY_KEY_DEALLOC_OBSERVER, tracker, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
-- (NSDictionary *)trackedInfo{
 
-   return self.tracker.userInfo;
-}
-- (void)setTrackedInfo:(id)trackedInfo{
-
-    self.tracker.userInfo = trackedInfo;
-    
-}
-- (LMUIVCTracker *)tracker{
+- (id<UIViewControllerTrackingLifeCycleUserInfo>)tracker{
     
     return objc_getAssociatedObject(self, &UIB_PROPERTY_KEY_DEALLOC_OBSERVER);
 }
@@ -156,7 +145,9 @@ static char UIB_PROPERTY_KEY_DEALLOC_OBSERVER;
 }
 - (void)stats_viewWillDisappear:(BOOL)animated{
     
-    [self.tracker setVisible:YES];
+    LMUIVCTracker *_privateTracker = (LMUIVCTracker *)self.tracker;
+    
+    [_privateTracker setVisible:YES];
     //DLog(@"stats_viewWillDisappear: %@", NSStringFromClass(self.class));
     [self stats_viewWillDisappear:animated];
     
@@ -171,8 +162,8 @@ static char UIB_PROPERTY_KEY_DEALLOC_OBSERVER;
 - (void)stats_viewDidDisappear:(BOOL)animated{
     
     //DLog(@"stats_viewDidDisappear: %@", NSStringFromClass(self.class));
-    
-    [self.tracker setVisible:NO];
+    LMUIVCTracker *_privateTracker = (LMUIVCTracker *)self.tracker;
+    [_privateTracker setVisible:NO];
     [self stats_viewDidDisappear:animated];
     
     
@@ -204,10 +195,11 @@ static char UIB_PROPERTY_KEY_DEALLOC_OBSERVER;
 }
 - (void)dealloc{
     
+    //NSLog(@"LMUIVCTracker  dealloc with self.viewController.tracker.trackedInfo: %@, self.userInfo: %@", self.viewController.tracker.trackedInfo ,self.userInfo);
     
-    if (_trackerDelegate && [_trackerDelegate respondsToSelector:@selector(UIViewControllerDidDealloc:)]) {
+    if (_trackerDelegate && [_trackerDelegate respondsToSelector:@selector(UIViewController:willDeallocWithTrackedInfo:)]) {
         
-        [_trackerDelegate UIViewControllerDidDealloc:self.viewController];
+        [_trackerDelegate UIViewController:self.viewController willDeallocWithTrackedInfo:self.trackedInfo];
     }
     
     

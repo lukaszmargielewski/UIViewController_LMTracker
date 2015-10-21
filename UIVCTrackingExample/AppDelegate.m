@@ -31,7 +31,8 @@
     [UIViewController setTrackerDelegate:self.statsTracker];
     
     ViewController *vc = [[ViewController alloc] init];
-    vc.trackedInfo = @{@"stack" : @(0)};
+    vc.tracker.trackedInfo = @{@"stack" : @(0)};
+    
     UINavigationController *nc = [[UINavigationController alloc] initWithRootViewController:vc];
     
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];

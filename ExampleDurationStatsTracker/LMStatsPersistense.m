@@ -9,6 +9,12 @@
 #import "LMStatsPersistense.h"
 #import "NSDictionary+UrlEncoding.h"
 
+#ifdef DEBUG
+#define DLog NSLog
+#else
+#define DLog //
+#endif
+
 @interface LMStatsPersistense()
 
 @property (nonatomic, readonly) NSString *directory;
@@ -69,15 +75,15 @@
     
     NSMutableArray *allParts = [[NSMutableArray alloc] init];
     
-    NSLog(@"");
-    NSLog(@"====================== SAVED %i FILES", c);
+    //DLog(@"");
+    //DLog(@"====================== SAVED %i FILES", c);
     for (NSString *fileName in files) {
         NSString *filePath = [self.directory stringByAppendingPathComponent:fileName];
         NSArray *partStats = [NSKeyedUnarchiver unarchiveObjectWithFile:filePath];
         [allParts addObjectsFromArray:partStats];
         
         i++;
-        NSLog(@"%i/%i. file: %@ => %i stats", i, c, fileName, partStats.count);
+        //DLog(@"%i/%i. file: %@ => %i stats", i, c, fileName, partStats.count);
     
         
         
@@ -110,7 +116,7 @@
     
     int j = 1;
     
-    NSLog(@"Merged:");
+    NSLog(@"Merged %lu parts:", (unsigned long)allParts.count);
     for (LMStats *ds in allParts) {
         
         NSString *iString = [(NSDictionary *)ds.userInfo stringWithKeyValueSeparator:@"_" valuesSeparator:@"," urlEncode:NO];
@@ -120,7 +126,11 @@
     }
     
     
-    NSLog(@"======================");
-    NSLog(@"");
+    if (allParts.count) {
+    
+        //DLog(@"======================");
+        //DLog(@"");
+    }
+    
 }
 @end

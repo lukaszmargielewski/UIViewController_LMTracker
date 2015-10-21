@@ -5,6 +5,12 @@
 #import "LMStatsTracker.h"
 #import "NSDictionary+UrlEncoding.h"
 
+#ifdef DEBUG
+    #define DLog NSLog
+#else
+    #define DLog //
+#endif
+
 @interface LMStatsTracker()
 @property (nonatomic, strong) NSMutableDictionary *trackingDictionary;
 @end
@@ -59,13 +65,13 @@
     // Therefore, use trackedInfo passed as method parameter instead....
     
     NSString *iString = [(NSDictionary *)trackedInfo stringWithKeyValueSeparator:@"_" valuesSeparator:@"," urlEncode:NO];
-    NSLog(@"%@ will dealloc: %@ - start", NSStringFromClass(viewController.class), iString);
+    //DLog(@"%@ will dealloc: %@ - start", NSStringFromClass(viewController.class), iString);
 
     
     [self pauseStatsForViewController:viewController trackedInfo:trackedInfo];
 
     iString = [(NSDictionary *)trackedInfo stringWithKeyValueSeparator:@"_" valuesSeparator:@"," urlEncode:NO];
-    NSLog(@"%@ will dealloc: %@ - end", NSStringFromClass(viewController.class), iString);
+    //DLog(@"%@ will dealloc: %@ - end", NSStringFromClass(viewController.class), iString);
 
     
     [self debugLogAllDurations];
@@ -81,12 +87,12 @@
 - (void)UIViewController:(UIViewController *)viewController viewWillDisappear:(BOOL)animated{
     
     NSString *iString = [(NSDictionary *)viewController.tracker.trackedInfo stringWithKeyValueSeparator:@"_" valuesSeparator:@"," urlEncode:NO];
-    NSLog(@"%@ viewWillDisappear - start: %@", NSStringFromClass(viewController.class), iString);
+    //DLog(@"%@ viewWillDisappear - start: %@", NSStringFromClass(viewController.class), iString);
     
     [self pauseStatsForViewController:viewController trackedInfo:viewController.tracker.trackedInfo];
     
     iString = [(NSDictionary *)viewController.tracker.trackedInfo stringWithKeyValueSeparator:@"_" valuesSeparator:@"," urlEncode:NO];
-    NSLog(@"%@ viewWillDisappear - end: %@", NSStringFromClass(viewController.class), iString);
+    //DLog(@"%@ viewWillDisappear - end: %@", NSStringFromClass(viewController.class), iString);
 }
 
 
@@ -166,32 +172,32 @@
 
 - (void)appDidEnterBackground:(NSNotification *)notification{
 
-    NSLog(@"%@" , NSStringFromSelector(_cmd));
+    //DLog(@"%@" , NSStringFromSelector(_cmd));
     [self persistAllContainingUserInfo];
 
 }
 - (void)appWillEnterForegound:(NSNotification *)notification{
 
-    NSLog(@"%@" , NSStringFromSelector(_cmd));
+    //DLog(@"%@" , NSStringFromSelector(_cmd));
 }
 
 - (void)appDidBecomeActive:(NSNotification *)notification{
 
-    NSLog(@"%@" , NSStringFromSelector(_cmd));
+    //DLog(@"%@" , NSStringFromSelector(_cmd));
     [self resumeAllVisible];
     [self debugLogAllDurations];
     
 }
 - (void)appWillResignActive:(NSNotification *)notification{
 
-    NSLog(@"%@" , NSStringFromSelector(_cmd));
+    //DLog(@"%@" , NSStringFromSelector(_cmd));
     [self pauseAll];
 
 }
 
 - (void)appWillTerminate:(NSNotification *)notification{
     
-    NSLog(@"%@" , NSStringFromSelector(_cmd));
+    //DLog(@"%@" , NSStringFromSelector(_cmd));
     [self persistAllContainingUserInfo];
     
 }
@@ -208,21 +214,21 @@
     if (allKeys.count) {
        
         int i = 1;
-        NSLog(@"");
-        NSLog(@"++++++++++++++++++++++++++++++");
+        //DLog(@"");
+        //DLog(@"++++++++++++++++++++++++++++++");
         
         for (NSString *key in allKeys) {
             
             LMStats *ds = self.trackingDictionary[key];
             NSString *iString = [(NSDictionary *)ds.userInfo stringWithKeyValueSeparator:@"_" valuesSeparator:@"," urlEncode:NO];
             
-            NSLog(@"%i. %@ => %.2f count: %i (v: %i, p: %i)", i, iString, ds.duration, ds.resumeCount, ds.visible, ds.paused);
+            //DLog(@"%i. %@ => %.2f count: %i (v: %i, p: %i)", i, iString, ds.duration, ds.resumeCount, ds.visible, ds.paused);
             i++;
         }
         
         
-        NSLog(@"++++++++++++++++++++++++++++++");
-        NSLog(@"");
+        //DLog(@"++++++++++++++++++++++++++++++");
+        //DLog(@"");
     }
     
     
